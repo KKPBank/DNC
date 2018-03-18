@@ -1,0 +1,9 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<templates>
+  <template name="NotifyFailExportDoNotCall">
+    <subject>Do Not Call fail to export phone list – {timestamp}</subject>
+  </template>
+  <template name="ExportDoNotCallPhoneNoToTOT">
+    <subject>**ด่วน**  KK Bank แจ้งส่งข้อมูลระงับการติดต่อ วันที่ {scheduleDate} รอบ {executeTime} -->Do not call list ({exportCount} Records)</subject>
+  </template>
+</templates>

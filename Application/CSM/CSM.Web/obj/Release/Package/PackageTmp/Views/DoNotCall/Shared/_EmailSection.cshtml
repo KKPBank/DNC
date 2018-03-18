@@ -1,0 +1,212 @@
+﻿@model CSM.Entity.DoNotCallEmail
+@using CSM.Common.Utilities
+<style>
+    .dvBtnAdd {
+        padding-right: 0;
+    }
+
+        .dvBtnAdd > button {
+            width: 100%;
+            min-width: 60px;
+            max-width: 100px;
+        }
+
+    #dvEmailTable {
+        max-height: 100px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+</style>
+
+<div class="section_panel">
+    @Html.Hidden("Email")
+    @Html.ValidationMessage("Email")
+    <div class="row margin-top-15">
+        <div class="row form-group">
+            <div class="col-sm-2 col-lg-1">
+                <label class="control-label form-label">@Html.DisplayNameFor(m => m.InputText):</label>
+            </div>
+            <div class="col-sm-5 col-lg-4">
+                <div class="row form-group">
+                    <div class="col-xs-9 nopadding">
+                        @Html.TextBoxFor(m => m.InputText,
+                           new
+                           {
+                               @id = "txtEmail",
+                               @class = "form-control input-sm",
+                               maxLength = Constants.MaxLength.Email
+                           })
+                    </div>
+                    <div class="col-xs-3 dvBtnAdd">
+                        <button onclick="onAddEmail()" type="button" class="btn btn-green btn-sm">
+                            <i class="fa fa-plus"></i>&nbsp;Add
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="row form-group">
+        <div id="dvEmailTable" class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap" width="80">Action</th>
+                        <th class="center text-nowrap">Email</th>
+                        <th class="center text-nowrap" width="110">Status</th>
+                        <th class="center text-nowrap">Update By</th>
+                        <th class="center text-nowrap" width="170">Update Date</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyEmail">
+                    @{
+                        foreach (var email in Model.EmailList)
+                        {
+                            <tr>
+                                <td class='center'>
+                                    @{ 
+                                        if (email.CanDelete)
+                                        {
+                                            <a href='javascript:;' class='delete-active' title='delete' onClick='onClickDeleteEmail(this, @email.Id)'></a>
+                                        }
+                                    }
+                                </td>
+                                <td>@email.Email</td>
+                                <td class="center">@email.Status</td>
+                                <td>@email.UpdateBy.DisplayName</td>
+                                <td class="center">@email.LastUpdateDateStr</td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    var url_ValidateEmailInput = '@Url.Action("ValidateEmailInput", "DoNotCall")';
+    $jq(function () {
+        @foreach (var email in Model.EmailList)
+        {
+            @:emailList.push({ Id: @email.Id, Email: '@email.Email', IsDeleted: @Json.Encode(email.IsDeleted), LastUpdateDate:'@email.LastUpdateDate' });
+        }
+    });
+
+    function onAddEmail() {
+        var email = $jq("#txtEmail").val().trim();
+        if (email != "") {
+            if (isExistingEmail(email)) {
+                doModal('dvAlertMsg', 'Message Dialog', 'เพิ่มข้อมูลซ้ำ กรุณาตรวจสอบ', '', '');
+            }
+            else {
+                var data = {
+                    Email: email
+                };
+                callAjaxPost(url_ValidateEmailInput, data, onValidateEmailInputSuccess);
+            } 
+        } else {
+            doModal('dvAlertMsg', 'Message Dialog', 'กรุณาระบุ Email', '', '');
+        }
+    }
+
+    function onValidateEmailInputSuccess(result) {
+        if (result.Valid == null) {
+            addNewEmail(result.Email);
+            $jq("#txtEmail").val("");
+        }
+        else {
+            doModal('dvAlertMsg', 'Message Dialog', 'รูปแบบ Email ไม่ถูกต้อง (format: sample@@kiatnakin.co.th)', '', '');
+        }
+    }
+
+    function addNewEmail(email) {
+        var now = new Date();
+        var model = {
+            Id: 0,
+            IsDeleted: false,
+            LastUpdateDate: now
+        };
+        // Add to list
+        model.Email = email;
+        emailList.push(model);
+
+        // Add row to table
+        var timestamp = convertDateToTimeStamp(now);
+        var trHtml = generateNewEmailRow(email, timestamp);
+        $jq("#tbodyEmail").prepend(trHtml);
+    }
+
+    function generateNewEmailRow(value, timestamp) {
+        var actionColumn = "<td class='center'><a href='javascript:;' class='delete-active' title='delete' onClick='onClickDeleteEmail(this, 0)'></a></td>";
+        var valColumn = "<td>" + value + "</td>";
+        var statusCol = "<td class='center'>Active</td>";
+        var updateByCol = "<td>" + $jq("#hidCurrentUserFullName").val() + "</td>";
+        var updateDateCol = "<td class='center'>" + timestamp + "</td>";
+
+        return "<tr>" + actionColumn + valColumn + statusCol + updateByCol + updateDateCol + "</tr>";
+    }
+
+    function isExistingEmail(email) {
+        var exists = false;
+        $jq.each(emailList, function (i, el) {
+            if (this.Email == email && !this.IsDeleted) {
+                exists = true;
+                return;
+            }
+        });
+        return exists;
+    }
+
+    function onClickDeleteEmail(element, emailId) {
+        var cell = $jq(element).parent();
+        var valueCell = cell.next();
+        var email = valueCell.text();
+        if (confirm('ต้องการลบข้อมูล Email: ' + email + ' ใช่หรือไม่')) {
+            var isExisitngData = emailId > 0;
+            if (!isExisitngData) {
+                deleteTempEmail(cell, email);
+            }
+            else {
+                deleteExistingEmail(cell, emailId);
+            }
+        }
+    }
+
+    function deleteTempEmail(cell, email) {
+        // remove from row
+        var row = cell.parent();
+        row.remove();
+        // remove from list
+        $jq.each(emailList, function (i, el) {
+            if (this.Email == email && this.Id == 0) {
+                emailList.splice(i, 1);
+            }
+        });
+    }
+
+    function deleteExistingEmail(cell, emailId) {
+        // remove detele button
+        cell.html('');
+        // set status to Deleted
+        var statusCell = cell.next().next();
+        statusCell.text("Deleted");
+        // set update by 
+        var updateByCell = statusCell.next();
+        updateByCell.text($jq("#hidCurrentUserFullName").val());
+        // set update date
+        var updateDateCell = updateByCell.next();
+        var deleteTime = new Date();
+        var timestamp = convertDateToTimeStamp(deleteTime);
+        updateDateCell.text(timestamp);
+        // update list data
+        $jq.each(emailList, function (i, el) {
+            if (this.Id == emailId) {
+                this.IsDeleted = true;
+                this.LastUpdateDate = deleteTime;
+            }
+        });
+    }
+
+</script>

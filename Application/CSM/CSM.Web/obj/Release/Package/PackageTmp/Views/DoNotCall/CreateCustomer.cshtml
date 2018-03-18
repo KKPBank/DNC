@@ -1,0 +1,137 @@
+﻿@model CSM.Entity.DoNotCallByCustomerEntity
+@using CSM.Common.Resources
+@{
+    ViewBag.Title = Resource.Lbl_NewCustomer;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section MainMenu
+{
+    @Html.Action("MainMenu", "MenuNavigator", new { selectedMenu = CSM.Entity.MenuCode.DoNotCall })
+}
+
+@section Breadcrumb {
+    <strong class="font-blue">@Resource.Lbl_DoNotCall</strong>
+    <strong class="font-green-jungle">&rsaquo;&rsaquo; @Resource.Lbl_NewCustomer</strong>
+}
+
+<div>
+    <div id="div_form" class="form-box">
+        <label class="font-red">@Resource.Lbl_WarningDoNotCallListDisclosure</label>
+        <!--Card ID section-->
+        <div class="section_panel">
+            <strong class="font-blue">@Resource.Lbl_BlockLevelCustomer</strong>
+            <div class="row margin-top-15">
+                <div class="col-xs-12">
+                    <div class="row form-group">
+                        <label class="col-sm-1 control-label form-label">@Html.DisplayNameFor(m => m.CardInfo.CardNo):</label>
+                        <div class="col-sm-4">
+                            @Html.TextBoxFor(m => m.CardInfo.CardNo, new { id = "txtCardNo", @class = "form-control input-sm" })
+                            @Html.Hidden("CardNo")
+                            @Html.ValidationMessage("CardNo")
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="col-md-4 col-lg-3 control-label form-label">
+                                @Html.DisplayNameFor(m => m.CardInfo.SubscriptionTypeId):
+                            </label>
+                            <div class="col-md-8 col-lg-9 nopadding">
+                                @Html.DropDownListFor(model => model.CardInfo.SubscriptionTypeId, new List<SelectListItem>(ViewBag.SubscriptionTypeList), Resource.Ddl_CustomerType_All, new { @class = "form-control input-sm", @id = "ddlSubscriptionType" })
+                                @Html.Hidden("SubscriptionTypeId")
+                                @Html.ValidationMessage("SubscriptionTypeId")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <!--Submit Buttons section-->
+        <div class="panel-actions">
+            <div class="pull-right">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <button id="btn_search" onclick="onSearch()" type="button" class="btn btn-blue btn-sm btn-xsmall">
+                            Next &nbsp; <i class="fa fa-arrow-right"></i>
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <button onclick="onCancelCreate()" type="button" class="btn btn-gray btn-sm btn-xsmall">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <!--Search result section-->
+        <div id="dvSearchResult"></div>
+    </div>
+</div>
+
+<div id="dvTarget"></div>
+
+@section masterjs{
+    @Scripts.Render("~/Scripts/DoNotCall.js")
+<script type="text/javascript">
+    var pager;
+    var lastPager;
+    var url_SearchDoNotCall = '@Url.Action("Search", "DoNotCall")';
+    var url_SearchNewCustomerTransaction = '@Url.Action("SearchNewCustomerTransaction", "DoNotCall")';
+
+    $jq(function () {
+        bindClickElementOnPressEnter($jq("#txtCardNo"), $jq("#btn_search"));
+    });
+
+    function reloadTransactionList() {
+        var data = getNewCustomerData();
+        data.PageNo = pager.PageNo;
+        data.PageSize = pager.PageSize;
+        callAjaxPost(url_SearchNewCustomerTransaction, data, onSuccessSearchCustomer);
+    }
+
+    function onSearch() {
+        clearServerErrors();
+        var cardNo = $jq("#txtCardNo").val();
+        var subsType = $jq("#ddlSubscriptionType").val();
+        var incompleteCard = cardNo == "" || subsType == "";
+        if (incompleteCard) {
+            var warningMsg = 'กรุณากรอกข้อมูลบัตรให้สมบูรณ์';
+            doModal('dvAlertMsg', 'Message Dialog', warningMsg, '', '');
+            return false;
+        } else {
+            var data = getNewCustomerData();
+            callAjaxPost(url_SearchNewCustomerTransaction, data, onSuccessSearchCustomer);
+        }
+    }
+
+    function getNewCustomerData() {
+        return {
+            CardNo: $jq("#txtCardNo").val(),
+            SubscriptionTypeId: $jq("#ddlSubscriptionType").val()
+        };
+    }
+
+    function toggleInputs(disable) {
+        $jq("#txtCardNo").prop("disabled", disable);
+        $jq("#ddlSubscriptionType").prop("disabled", disable)
+    }
+
+    function onSuccessSearchCustomer(result) {
+        var hasData = result.Valid == null;
+
+        if (hasData) {
+            $jq("#dvSearchResult").html('');
+            $jq("#dvSearchResult").html(result);
+        } else {
+            showServerErrors(result);
+        }
+    }
+
+    function onCancelCreate() {
+        //clear data
+        clearServerErrors();
+        toggleInputs(false);
+        $jq("#txtCardNo").val("");
+        $jq("#ddlSubscriptionType").val("");
+        $jq("#dvSearchResult").html("");
+    }
+</script>
+}

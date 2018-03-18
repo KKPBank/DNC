@@ -1,0 +1,138 @@
+﻿@model CSM.Web.Models.DoNotCallFileUploadInputModel
+@using CSM.Common.Resources
+@using CSM.Common.Utilities
+
+@{
+    ViewBag.Title = Resource.Lbl_InsertDoNotCallLoadList;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section MainMenu
+{
+    @Html.Action("MainMenu", "MenuNavigator", new { selectedMenu = CSM.Entity.MenuCode.DoNotCall })
+}
+
+@section Breadcrumb {
+    <strong class="font-blue">@Resource.Lbl_DoNotCall</strong>
+    <strong class="font-green-jungle">&rsaquo;&rsaquo; @Resource.Lbl_InsertDoNotCallLoadList</strong>
+}
+
+<style>
+    .form-btn {
+        width: 90px;
+    }
+
+    input[type="file"] {
+        display: none;
+    }
+
+    #btnUpload {
+        display: none;
+    }
+</style>
+
+<div>
+    <div id="div_form" class="form-box">
+        @using (Html.BeginForm("SubmitUploadFile", "DoNotCall", FormMethod.Post, new { @id = "frmUpload" }))
+        {
+            @Html.AntiForgeryToken()
+            @Html.ValidationSummary(true)
+            <div class="section_panel">
+                <div class="row margin-top-15">
+                    <div class="col-xs-12">
+                        <div class="row form-group">
+                            <label class="col-sm-2 col-lg-1 control-label form-label">File Name:</label>
+                            <div class="col-sm-5 col-md-4"><input id="txtFileName" disabled="disabled" class="form-control input-sm" /></div>
+                            <div class="col-sm-5 col-md-3">
+                                <label class="form-btn btn btn-gray btn-sm">
+                                    Browse
+                                    @Html.TextBoxFor(model => model.File, null, new
+                                    {
+                                        id = "txtFile",
+                                        type = "file",
+                                        accept = Constants.DNC.AllowedFileType,
+                                        onChange = "onBrowse()"
+                                    })
+                                </label>
+                                &nbsp;
+                                <button id="btnUpload" onclick="onSave(event)" class="form-btn btn btn-blue btn-sm">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="dvResult"></div>
+            <div class="panel-actions">
+                <div class="pull-right">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <button onclick="onClose()" type="button" class="btn btn-gray btn-sm btn-xsmall">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section masterjs
+{
+    <script>
+        var allowedFileType = '@Model.AllowedFileType';
+        var allowedFileSize = @Model.LimitFileSize;
+        var fileTypeErrorMsg = '@Resource.ValError_FileExtension';
+        var fileSizeErrorMsg = '@Resource.ValError_FileSizeExceedMaxLimit';
+        var url_SubmitUploadFile = '@Url.Action("SubmitUploadFile", "DoNotCall")';
+
+        $jq(function () {
+            setupFormSubmitWithFileUpload($jq("#frmUpload"));
+        });
+
+        function onSave(e) {
+            $jq("#dvResult").html("");
+            submitFormWithFileUpload(e, $jq("#frmUpload"), onUploadSuccess);
+        }
+
+        function onUploadSuccess(result) {
+            if (result.Valid == null) {
+                $jq("#dvResult").html(result);
+            } else {
+                showServerErrors(result);
+            }
+        }
+
+        function onClose() {
+            window.close();
+        }
+
+        function onBrowse() {
+            var file = $jq('#txtFile')[0].files[0];
+            var validFileType = file.type == allowedFileType;
+            var validFileSize = file.size <= allowedFileSize;
+            var valid = validFileSize && validFileType;
+
+            if (!validFileType) {
+                doModal('dvAlertMsg', 'Message Dialog', fileTypeErrorMsg, '', '');
+                $jq('#txtFile').val("");
+                $jq("#txtFileName").val("");
+            } else if (!validFileSize) {
+                doModal('dvAlertMsg', 'Message Dialog', fileSizeErrorMsg, '', '');
+                $jq('#txtFile').val("");
+                $jq("#txtFileName").val("");
+            } else {
+                $jq("#txtFileName").val(file.name);
+            }
+
+            toggelUploadButton(valid);
+        }
+
+        function toggelUploadButton(show) {
+            var btn = $jq("#btnUpload");
+            if (show) {
+                btn.show();
+            } else {
+                btn.hide();
+            }
+        }
+    </script>
+}

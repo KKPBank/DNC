@@ -1,0 +1,130 @@
+﻿@model CSM.Entity.DoNotCallFileUploadDetailModel
+@using CSM.Common.Utilities;
+@using CSM.Common.Resources;
+
+@helper LabelForSort(string headerText, string fieldName)
+    {
+        string sortField = Model.Pager.SortField ?? "Id"; // default value
+        string sortOrder = Model.Pager.SortOrder ?? Constants.SortOrderAsc; // default value
+
+        <a href="javascript:;" onclick="sortField('@fieldName');return false;">
+            @headerText
+            @if (fieldName.ToLower().Equals(sortField.ToLower()))
+            {
+                if (sortOrder.Equals(Constants.SortOrderAsc))
+                {<i class="fa fa-sort-asc"></i>}
+                else
+                {<i class="fa fa-sort-desc"></i> }
+            }
+            else
+            {<i class="fa fa-sort"></i>}
+        </a>
+}
+
+@{
+    if (Model.DataList != null && Model.DataList.Count > 0)
+    {
+        <div class="form-inline nopadding">
+            @{ Html.RenderPartial("~/Views/Shared/_TablePaging.cshtml", Model.Pager); }
+        </div>
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap">@LabelForSort("ลำดับที่", "RowNum")</th>
+                        <th class="center text-nowrap">@LabelForSort("Type", "TransactionType")</th>
+                        <th class="center text-nowrap">@LabelForSort("Status", "IsActive")</th>
+                        <th class="center text-nowrap">Block Sales <br /> (Telephone)</th>
+                        <th class="center text-nowrap">Block Information <br /> (Telephone)</th>
+                        <th class="center text-nowrap">Block Sales <br /> (SMS)</th>
+                        <th class="center text-nowrap">Block Information <br /> (SMS)</th>
+                        <th class="text-nowrap">@LabelForSort("Card ID", "CardNo")</th>
+                        <th class="text-nowrap">@LabelForSort("First Name", "FirstName")</th>
+                        <th class="text-nowrap">@LabelForSort("Last Name", "LastName")</th>
+                        <th class="text-nowrap">@LabelForSort("Telephone", "PhoneNo")</th>
+                        <th class="text-nowrap">@LabelForSort("Email", "Email")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.DataList)
+                    {
+                        <tr>
+                            <td class="center">@item.RowNum</td>
+                            <td class="center">@item.TransactionTypeName</td>
+                            <td class="center">@item.Status</td>
+                            <td class="center">@item.BlockSalesTelephone</td>
+                            <td class="center">@item.BlockInfoTelephone</td>
+                            <td class="center">@item.BlockSalesSMS</td>
+                            <td class="center">@item.BlockInfoSMS</td>
+                            <td>@item.CardNo</td>
+                            <td>@item.FirstName</td>
+                            <td>@item.LastName</td>
+                            <td>@item.PhoneNo</td>
+                            <td>@item.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <script>
+            var ASC = '@Constants.SortOrderAsc';
+            var DESC = '@Constants.SortOrderDesc';
+            $jq(function () {
+                initializeSearchFilter();
+                initializeTablePaging(searchFilter, successFilter, loadData);
+            });
+
+            function initializeSearchFilter() {
+                searchFilter = {};
+                setupFilterPaging();
+                successFilter = searchFilter;
+            };
+
+            function setupFilterPaging() {
+                searchFilter.PageNo = '@Model.Pager.PageNo';
+                searchFilter.PageSize = '@Model.Pager.PageSize';
+                searchFilter.SortField = '@Model.Pager.SortField';
+                searchFilter.SortOrder = '@Model.Pager.SortOrder';
+            }
+
+            function sortField(selectedSortField) {
+                if (selectedSortField == searchFilter.SortField)
+                    searchFilter.SortOrder = (searchFilter.SortOrder == ASC) ? DESC : ASC;
+                else
+                    searchFilter.SortOrder = ASC;
+                searchFilter.SortField = selectedSortField;
+                searchFilter.PageNo = 1;
+                loadData();
+            }
+
+        </script>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap">ลำดับที่</th>
+                        <th class="center text-nowrap">Transaction Type</th>
+                        <th class="center text-nowrap">Do Not Call Status</th>
+                        <th class="center text-nowrap">Block Sales <br /> (Telephone)</th>
+                        <th class="center text-nowrap">Block Information <br /> (Telephone)</th>
+                        <th class="center text-nowrap">Block Sales <br /> (SMS)</th>
+                        <th class="center text-nowrap">Block Information <br /> (SMS)</th>
+                        <th class="text-nowrap">Card ID</th>
+                        <th class="text-nowrap">First Name</th>
+                        <th class="text-nowrap">Last Name</th>
+                        <th class="text-nowrap">Telephone</th>
+                        <th class="text-nowrap">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="12" class="center">@Resource.Msg_NoRecords</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+}

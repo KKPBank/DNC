@@ -1,0 +1,207 @@
+﻿@model CSM.Entity.DoNotCallTelephone
+@using CSM.Common.Utilities
+
+<style>
+    .dvBtnAdd {
+        padding-right: 0;
+    }
+
+        .dvBtnAdd > button {
+            width: 100%;
+            min-width: 60px;
+            max-width: 100px;
+        }
+
+    #dvTelephoneTable {
+        max-height: 100px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+</style>
+
+<div class="section_panel">
+    @Html.Hidden("Telephone")
+    @Html.ValidationMessage("Telephone")
+    <div class="row margin-top-15">
+        <div class="row form-group">
+            <div class="col-sm-2 col-lg-1">
+                <label class="control-label form-label">@Html.DisplayNameFor(m => m.InputText):</label>
+            </div>
+            <div class="col-sm-5 col-lg-4">
+                <div class="row form-group">
+                    <div class="col-xs-9 nopadding">
+                        @Html.TextBoxFor(m => m.InputText,
+                          new
+                          {
+                              @id = "txtTelephone",
+                              @class = "form-control input-sm",
+                              maxLength = Constants.MaxLength.DoNotCallPhoneNo,
+                              minLength = Constants.MinLenght.PhoneNo
+                          })
+                    </div>
+                    <div class="col-xs-3 dvBtnAdd">
+                        <button type="button" onclick="onAddPhoneNo()" class="btn btn-green btn-sm">
+                            <i class="fa fa-plus"></i>&nbsp;Add
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row form-group">
+            <div id="dvTelephoneTable" class="table-responsive">
+                <table class="table datatable">
+                    <thead>
+                        <tr>
+                            <th class="center text-nowrap" width="80">Action</th>
+                            <th class="center text-nowrap">Telephone</th>
+                            <th class="center text-nowrap" width="110">Status</th>
+                            <th class="center text-nowrap">Update By</th>
+                            <th class="center text-nowrap" width="170">Update Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbodyTelephone">
+                        @{
+                            foreach (var phone in Model.TelephoneList)
+                            {
+                                <tr>
+                                    <td class='center'>
+                                        @{ if (phone.CanDelete)
+                                            { <a href='javascript:;' class='delete-active' title='delete' onClick='onClickDeletePhoneNo(this, @phone.Id)'></a> } }
+                                    </td>
+                                    <td>@phone.PhoneNo</td>
+                                    <td class="center">@phone.Status</td>
+                                    <td>@phone.UpdateBy.DisplayName</td>
+                                    <td class="center">@phone.LastUpdateDateStr</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var url_ValidatePhoneNoInput = '@Url.Action("ValidatePhoneNoInput", "DoNotCall")';
+    $jq(function () {
+        @foreach (var phone in Model.TelephoneList)
+        {
+            @:phoneList.push({ Id: @phone.Id, PhoneNo: '@phone.PhoneNo', IsDeleted: @Json.Encode(phone.IsDeleted), LastUpdateDate: '@phone.LastUpdateDate' });
+        }
+    });
+
+    function onAddPhoneNo() {
+        var phoneNo = $jq("#txtTelephone").val();
+        if (phoneNo != "") {
+            if (isExistingPhoneNo(phoneNo)) {
+                doModal('dvAlertMsg', 'Message Dialog', 'เพิ่มข้อมูลซ้ำ กรุณาตรวจสอบ', '', '');
+            } else {
+                var data = {
+                    PhoneNo: phoneNo
+                };
+                callAjaxPost(url_ValidatePhoneNoInput, data, onValidatePhoneNoInputSuccess);
+            }
+        } else {
+            doModal('dvAlertMsg', 'Message Dialog', 'กรุณาระบุ Telephone', '', '');
+        }
+    }
+
+    function onValidatePhoneNoInputSuccess(result) {
+        if (result.Valid == null) {
+            addNewPhoneNo(result.PhoneNo);
+            $jq("#txtTelephone").val("");
+        }
+        else {
+            doModal('dvAlertMsg', 'Message Dialog', 'กรุณากรอกเบอร์โทรศัพท์เป็นตัวเลข 9-10 หลัก (Format: 0823456789)', '', '');
+        }
+    }
+
+    function isExistingPhoneNo(phoneNo) {
+        var exists = false;
+        $jq.each(phoneList, function (i, el) {
+            if (this.PhoneNo == phoneNo && !this.IsDeleted) {
+                exists = true;
+                return;
+            }
+        });
+        return exists;
+    }
+
+    function addNewPhoneNo(phoneNo) {
+        var now = new Date();
+        var model = {
+            Id: 0,
+            IsDeleted: false,
+            LastUpdateDate: now
+        };
+        // Add to list
+        model.PhoneNo = phoneNo;
+        phoneList.push(model);
+
+        // Add row to table
+        var timestamp = convertDateToTimeStamp(now);
+        var trHtml = generateNewPhoneRow(phoneNo, timestamp);
+        $jq("#tbodyTelephone").prepend(trHtml);
+    }
+
+    function onClickDeletePhoneNo(element, phoneId) {
+        var cell = $jq(element).parent();
+        var phoneNoCell = cell.next();
+        var phoneNo = phoneNoCell.text();
+        if (confirm('ต้องการลบข้อมูล Telephone: ' + phoneNo + ' ใช่หรือไม่')) {
+            var isExisitngData = phoneId > 0;
+            if (!isExisitngData) {
+                deleteTempPhoneNo(cell, phoneNo);
+            }
+            else {
+                deleteExistingPhoneNo(cell, phoneId);
+            }
+        }
+    }
+
+    function deleteTempPhoneNo(cell, phoneNo) {
+        // remove from row
+        var row = cell.parent();
+        row.remove();
+        // remove from list
+        $jq.each(phoneList, function (i, el) {
+            if (this.PhoneNo == phoneNo && this.Id == 0) {
+                phoneList.splice(i, 1);
+            }
+        });
+    }
+
+    function deleteExistingPhoneNo(cell, phoneId) {
+        // remove detele button
+        cell.html('');
+        // set status to Deleted
+        var statusCell = cell.next().next();
+        statusCell.text("Deleted");
+        // set update by
+        var updateByCell = statusCell.next();
+        updateByCell.text($jq("#hidCurrentUserFullName").val());
+        // set update date
+        var updateDateCell = updateByCell.next();
+        var deleteTime = new Date();
+        var timestamp = convertDateToTimeStamp(deleteTime);
+        updateDateCell.text(timestamp);
+        // update list data
+        $jq.each(phoneList, function (i, el) {
+            if (this.Id == phoneId) {
+                this.IsDeleted = true;
+                this.LastUpdateDate = deleteTime;
+            }
+        });
+    }
+
+    function generateNewPhoneRow(value, timestamp) {
+        var actionColumn = "<td class='center'><a href='javascript:;' class='delete-active' title='delete' onClick='onClickDeletePhoneNo(this, 0)'></a></td>";
+        var valColumn = "<td>" + value + "</td>";
+        var statusCol = "<td class='center'>Active</td>";
+        var updateByCol = "<td>" + $jq("#hidCurrentUserFullName").val() + "</td>";
+        var updateDateCol = "<td class='center'>" + timestamp + "</td>";
+
+        return "<tr>" + actionColumn + valColumn + statusCol + updateByCol + updateDateCol + "</tr>";
+    }
+</script>

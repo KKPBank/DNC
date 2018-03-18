@@ -1,0 +1,107 @@
+﻿@model CSM.Web.Models.DoNotCallByPhoneSearchResultViewModel
+
+@using CSM.Common.Resources
+
+@{
+    bool hasData = Model.Transactions.Count > 0;
+}
+
+@{
+    if (hasData)
+    {
+        <div class="form-inline nopadding">
+            @{ Html.RenderPartial("~/Views/Shared/_TablePaging.cshtml", Model.Pager); }
+        </div>
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap" style="width:70px;">Action</th>
+                        <th class="center text-nowrap" style="width:110px;">Transaction Date</th>
+                        <th class="center text-nowrap">Status</th>
+                        <th class="text-nowrap">Create By</th>
+                        <th class="text-nowrap">Card ID</th>
+                        <th class="text-nowrap">First Name</th>
+                        <th class="text-nowrap">Last Name</th>
+                        <th class="text-nowrap">Telephone</th>
+                        <th class="text-nowrap">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int rowIndex = 1; }
+                    @foreach (var item in Model.Transactions)
+                    {
+                        string rowId = "act_" + (rowIndex++);
+                        <tr>
+                            <td class="center text-nowrap">
+                                <a href="javascript:;" class="edit-active" title="edit" onclick="editContactByTelephone('@item.Id');"></a>
+                            </td>
+                            <td class="center">@item.DisplayCreateDate</td>
+                            <td class="center">@item.DisplayStatus</td>
+                            <td class="center">@item.CreateByName</td>
+                            <td class="center">@item.CardNo</td>
+                            <td class="center">@item.FirstName</td>
+                            <td class="center">@item.LastName</td>
+                            <td class="center">@item.PhoneNo</td>
+                            <td class="center">@item.Email</td>
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="9" class="center">
+                            <a onclick="addNewDoNotCallByTelephone()" style="width:100px;" class="btn">
+                                เพิ่มรายการ
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script>
+            var url_EditPhoneNo = '@Url.Action("EditPhoneNo", "DoNotCall")';
+
+            $jq(function(){
+                pager = {
+                    PageNo: @Model.Pager.PageNo,
+                    PageSize: @Model.Pager.PageSize
+                };
+
+                lastPager = pager;
+                initializeTablePaging(pager, lastPager, reloadTransactionList);
+            });
+
+            function editContactByTelephone(id) {
+                openEditPhoneNoWindow(url_EditPhoneNo, true, id);
+            }
+        </script>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap" style="width:70px;">Action</th>
+                        <th class="center text-nowrap" style="width:110px;">Transaction Date</th>
+                        <th class="center text-nowrap">Status</th>
+                        <th class="text-nowrap">Create By</th>
+                        <th class="text-nowrap">Card ID</th>
+                        <th class="text-nowrap">First Name</th>
+                        <th class="text-nowrap">Last Name</th>
+                        <th class="text-nowrap">Telephone</th>
+                        <th class="text-nowrap">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="9" class="center">
+                            @Resource.Msg_NoRecords
+                            <a onclick="addNewDoNotCallByTelephone()" style="width:100px;" class="btn">
+                                เพิ่มรายการ
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+}

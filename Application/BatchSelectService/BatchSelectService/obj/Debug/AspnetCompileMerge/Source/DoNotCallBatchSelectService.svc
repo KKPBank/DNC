@@ -1,0 +1,1 @@
+﻿<%@ ServiceHost Language="C#" Debug="true" Service="BatchSelectService.DoNotCallBatchSelectService" CodeBehind="DoNotCallBatchSelectService.svc.cs" %>

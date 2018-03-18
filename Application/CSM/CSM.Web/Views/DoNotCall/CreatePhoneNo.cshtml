@@ -1,0 +1,159 @@
+﻿@model CSM.Web.Models.DoNotCallNewTelephoneModel
+@using CSM.Common.Resources
+@using CSM.Common.Utilities
+@{
+    ViewBag.Title = Resource.Lbl_NewTelephone;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section MainMenu
+{
+    @Html.Action("MainMenu", "MenuNavigator", new { selectedMenu = CSM.Entity.MenuCode.DoNotCall })
+}
+
+@section Breadcrumb {
+    <strong class="font-blue">@Resource.Lbl_DoNotCall</strong>
+    <strong class="font-green-jungle">&rsaquo;&rsaquo; @Resource.Lbl_NewTelephone</strong>
+}
+
+<div>
+    <div id="div_form" class="form-box">
+        <label class="font-red">@Resource.Lbl_WarningDoNotCallListDisclosure</label>
+        <br />
+        <label class="font-red">@Resource.Lbl_WarningInsertTelephoneOrEmail</label>
+        <!--Card ID section-->
+        <div class="section_panel">
+            <strong class="font-blue">@Resource.Lbl_BlockLevelTelephone</strong>
+            <div class="row margin-top-15">
+                <div class="col-xs-12">
+                    <div class="row form-group">
+                        <label class="col-sm-1 control-label form-label">@Html.DisplayNameFor(m => m.PhoneNo):</label>
+                        <div class="col-sm-4">
+                            @Html.TextBoxFor(m => m.PhoneNo, new
+                        {
+                            id = "txtPhoneNo",
+                            @class = "form-control input-sm",
+                            maxlength = Constants.MaxLength.DoNotCallPhoneNo
+                        })
+                            @Html.ValidationMessageFor(m => m.PhoneNo)
+                        </div>
+                        <label class="col-sm-1 control-label form-label text-right">@Html.DisplayNameFor(m => m.Email):</label>
+                        <div class="col-sm-5">
+                            @Html.TextBoxFor(m => m.Email, new
+                        {
+                            id = "txtEmail",
+                            @class = "form-control input-sm",
+                            maxlength = Constants.MaxLength.Email
+                        })
+                            @Html.ValidationMessageFor(m => m.Email)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <!--Submit Buttons section-->
+        <div class="panel-actions">
+            <div class="pull-right">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <button id="btn_search" onclick="onSearch()" type="button" class="btn btn-blue btn-sm btn-xsmall">
+                            <i class="fa fa-search"></i>&nbsp;Search
+                        </button>
+                    </div>
+                    <div class="form-group">
+                        <button onclick="onCancelCreate()" type="button" class="btn btn-gray btn-sm btn-xsmall">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <!--Search result section-->
+        <div id="dvSearchResult"></div>
+    </div>
+</div>
+<div id="dvTarget"></div>
+
+@section masterjs{
+    @Scripts.Render("~/Scripts/DoNotCall.js")
+<script>
+        var pager;
+        var lastPager;
+        var url_SearchNewPhoneNo = '@Url.Action("SearchNewPhoneNo", "DoNotCall")';
+        var url_SearchDoNotCall = '@Url.Action("Search", "DoNotCall")';
+        var url_NewPhoneNo = '@Url.Action("NewPhoneNo", "DoNotCall")';
+        var url_ValidateTelephoneBaseContact = '@Url.Action("ValidateTelephoneBaseContact", "DoNotCall")';
+
+        $jq(function () {
+            bindClickElementOnPressEnter($jq("#txtPhoneNo, #txtEmail"), $jq("#btn_search"));
+        });
+
+        function reloadTransactionList() {
+            var data = {
+                PhoneNo: $jq("#txtPhoneNo").val(),
+                Email: $jq("#txtEmail").val(),
+                PageNo: pager.PageNo,
+                PageSize: pager.PageSize
+            };
+
+            callAjaxPost(url_SearchNewPhoneNo, data , onSuccessSearchPhoneNo)
+        }
+
+        function addNewDoNotCallByTelephone() {
+            clearServerErrors();
+            var data = {
+                PhoneNo: $jq("#txtPhoneNo").val(),
+                Email: $jq("#txtEmail").val()
+            };
+            callAjaxPost(url_ValidateTelephoneBaseContact, data, onSuccessValidatePhoneNoEmail)
+        }
+
+        function onSearch() {
+            var phone = $jq("#txtPhoneNo").val();
+            var email = $jq("#txtEmail").val(); 
+            clearServerErrors();
+            var noFilter = phone == "" && email == "";
+            if (noFilter) {
+                var warningMsg = '@Resource.Msg_EnteredAtLeastOneCriteria';
+                doModal('dvAlertMsg', 'Message Dialog', warningMsg, '', '');
+                return false;
+            } else {
+                var data = {
+                    PhoneNo: phone,
+                    Email: email
+                };
+                callAjaxPost(url_SearchNewPhoneNo, data , onSuccessSearchPhoneNo)
+            }
+        }
+
+        function onSuccessValidatePhoneNoEmail(result) {
+            var valid = result.Valid == null;
+
+            if (valid) {
+                openNewPhoneNoWindow(url_NewPhoneNo, true);
+            } else {
+                showServerErrors(result);
+            }
+        }
+
+        function onSuccessSearchPhoneNo(result) {
+            var hasData = result.Valid == null;
+
+            if (hasData) {
+                $jq("#dvSearchResult").html('');
+                $jq("#dvSearchResult").html(result);
+            } else {
+                showServerErrors(result);
+            }
+        }
+
+        function onCancelCreate() {
+            //clear data
+            clearServerErrors();
+            $jq("#txtPhoneNo").val("");
+            $jq("#txtEmail").val(""); 
+            $jq("#dvSearchResult").html("");
+        }
+
+</script>
+}

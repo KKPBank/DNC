@@ -1,0 +1,122 @@
+﻿@model CSM.Web.Models.DoNotCallViewModel
+@using CSM.Common.Resources
+@using CSM.Common.Utilities
+@{
+    bool hasData = Model.DoNotCallList.Count > 0;
+}
+@helper LabelForSort(string headerText, string fieldName)
+    {
+        string sortField = Model.SearchFilter.SortField ?? "Id"; // default value
+        string sortOrder = Model.SearchFilter.SortOrder ?? Constants.SortOrderAsc; // default value
+
+        <a href="javascript:;" onclick="sortField('@fieldName');return false;">
+            @headerText
+            @if (fieldName.ToLower().Equals(sortField.ToLower()))
+            {
+                if (sortOrder.Equals(Constants.SortOrderAsc))
+                {<i class="fa fa-sort-asc"></i>}
+                else
+                {<i class="fa fa-sort-desc"></i> }
+            }
+            else
+            {<i class="fa fa-sort"></i>}
+        </a>
+}
+
+@{
+    if (hasData)
+    {
+        <div class="form-inline nopadding">
+            @{ Html.RenderPartial("~/Views/Shared/_TablePaging.cshtml", Model.SearchFilter); }
+        </div>
+        <div class="table-responsive">
+            <table id="tblDoNotCallList" class="table datatable" style="width:1890px!important;">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap">Action</th>
+                        <th class="center text-nowrap">@LabelForSort("Card ID", "CardNo")</th>
+                        <th class="center text-nowrap">@LabelForSort("Subscription Type", "SubscriptionType")</th>
+                        <th class="center text-nowrap">@LabelForSort("First Name", "FirstName")</th>
+                        <th class="center text-nowrap">@LabelForSort("Last Name", "LastName")</th>
+                        <th class="center text-nowrap">@LabelForSort("Transaction Date", "TransactionDate")</th>
+                        <th class="center text-nowrap">@LabelForSort("Do Not Call Status", "Status")</th>
+                        <th class="center text-nowrap">Block Sales <br />(Telephone)</th>
+                        <th class="center text-nowrap">Block Information <br /> (Telephone)</th>
+                        <th class="center text-nowrap">Block Sales <br /> (SMS)</th>
+                        <th class="center text-nowrap">Block Information <br /> (SMS)</th>
+                        <th class="center text-nowrap">Block Sales <br /> (Email)</th>
+                        <th class="center text-nowrap">Block Information <br /> (Email)</th>
+                        <th class="center text-nowrap">Create By</th>
+                        <th class="center text-nowrap">@LabelForSort("Telephone", "Telephone")</th>
+                        <th class="center text-nowrap">@LabelForSort("Email", "Email")</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int rowIndex = 1; }
+                    @foreach (var item in Model.DoNotCallList)
+                    {
+                        string rowId = "act_" + (rowIndex++);
+                        <tr>
+                            <td class="center text-nowrap">
+                                <a href="javascript:;" class="edit-active" title="edit" onclick="initDoNotCallEdit('@item.Id', '@item.TransactionType');"></a>
+                            </td>
+                            <td class="left text-nowrap">@item.CardNo</td>
+                            <td class="">@item.SubscriptionType</td>
+                            <td class="left text-nowrap">@Html.Raw(StringHelpers.DisplayWithMaxLength(item.FirstName, 50))</td>
+                            <td class="left text-nowrap">@Html.Raw(StringHelpers.DisplayWithMaxLength(item.LastName, 50))</td>
+                            <td class="center">@item.TransactionDateString</td>
+                            <td class="center">@item.DisplayStatus</td>
+                            <td class="center">@item.IsBlockSalesTelephone</td>
+                            <td class="center">@item.IsBlockInformationTelephone</td>
+                            <td class="center">@item.IsBlockSalesSms</td>
+                            <td class="center">@item.IsBlockInformationSms</td>
+                            <td class="center">@item.IsBlockSalesEmail</td>
+                            <td class="center">@item.IsBlockInformationEmail</td>
+                            <td class="left text-nowrap">@Html.Raw(StringHelpers.DisplayWithMaxLength(item.CreateByName, 50))</td>
+                            <td class="left text-nowrap">@item.Telephone</td>
+                            <td class="left text-nowrap">@item.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <script>
+            $jq(function () {
+                $jq("#tblDoNotCallList").tableHeadFixer({ "head": false, "left": 5 });
+                initializeTablePaging(searchFilter, successFilter, loadData);
+            })
+        </script>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap">Action</th>
+                        <th class="center text-nowrap">Card ID</th>
+                        <th class="center text-nowrap">Subscription Type</th>
+                        <th class="center text-nowrap">First Name</th>
+                        <th class="center text-nowrap">Last Name</th>
+                        <th class="center text-nowrap">Transaction Date</th>
+                        <th class="center text-nowrap">Do Not Call Status</th>
+                        <th class="center text-nowrap">Block Sales <br />(Telephone)</th>
+                        <th class="center text-nowrap">Block Information <br /> (Telephone)</th>
+                        <th class="center text-nowrap">Block Sales <br /> (SMS)</th>
+                        <th class="center text-nowrap">Block Information <br /> (SMS)</th>
+                        <th class="center text-nowrap">Block Sales <br /> (Email)</th>
+                        <th class="center text-nowrap">Block Information <br /> (Email)</th>
+                        <th class="center text-nowrap">Create By</th>
+                        <th class="center text-nowrap">Telephone</th>
+                        <th class="center text-nowrap">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="16" class="center">@Resource.Msg_NoRecords</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+}

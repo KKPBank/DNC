@@ -1,0 +1,88 @@
+﻿
+<div class="section_borderless_panel">
+    <div class="text-right">
+        <button id="btnShowHistoryList" class="btn btn-sm btn-gray" type="button">History Do Not Call List</button>
+    </div>
+</div>
+
+<!--Popup List-->
+<div id="historyLogModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" data-url='@Url.Action("GetHistoryDoNotCallList", "DoNotCall")'>
+    <div class="modal-dialog modal-sm" style="min-width:600px;">
+        <div class="modal-content">
+            <div class="modal-body form-horizontal">
+                <div id='dvHistoryLog'></div>
+            </div>
+            <div class="modal-footer nopadding">
+                <div class="form-group text-right">
+                    <button onclick="closeHistoryLogModal()" type="button" class="btn btn-gray btn-sm btn-xsmall">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Popup Detail-->
+<div id="historyLogDetailModal" class="modal fade" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" data-url='@Url.Action("ViewTransactionHistoryDetail", "DoNotCall")'>
+    <div class="modal-dialog modal-sm" style="min-width:750px;">
+        <div class="modal-content">
+            <div class="modal-body form-horizontal">
+                <div id='dvHistoryLogDetail'></div>
+            </div>
+            <div class="modal-footer nopadding">
+                <div class="form-group text-right">
+                    <button onclick="closeHistoryLogDetailModal()" type="button" class="btn btn-gray btn-sm btn-xsmall">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="dvTarget"></div>
+
+<script type="text/javascript">
+    var pager;
+    var lastPager;
+
+    $jq(function () {
+        $jq("#btnShowHistoryList").on("click", onShowHistoryLogList);
+    });
+
+    function reloadHistoryLogList() {
+        var url = $jq('#historyLogModal').data('url');
+        var data = {
+            CustomerId: $jq('#hidTransactionId').val(),
+            PageNo: pager.PageNo,
+            PageSize: pager.PageSize
+        };
+
+        callAjaxPost(url, data, onReloadSuccess);
+    }
+
+    function onReloadSuccess(result) {
+        lastPager = pager;
+        $jq('#dvHistoryLog').html(result);
+    }
+
+    function closeHistoryLogModal() {
+        $jq('#historyLogModal').modal('hide');
+    }
+
+    function closeHistoryLogDetailModal() {
+        $jq('#historyLogDetailModal').modal('hide');
+    }
+
+    function onShowHistoryLogList() {
+        var url = $jq('#historyLogModal').data('url');
+        var data = {
+            customerId: $jq('#hidTransactionId').val(),
+        };
+
+        callAjaxPost(url, data, showLogModal);
+    }
+
+    function showLogModal(result) {
+        $jq('#dvHistoryLog').html(result);
+        $jq('#historyLogModal').modal('show');
+    }
+
+</script>

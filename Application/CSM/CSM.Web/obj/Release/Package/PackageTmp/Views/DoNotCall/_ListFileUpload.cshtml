@@ -1,0 +1,108 @@
+﻿@model CSM.Web.Models.DoNotCallUploadSearchResultViewModel
+@using CSM.Common.Resources
+@using CSM.Common.Utilities
+
+@{
+    bool hasData = Model.Results.Count > 0;
+}
+@helper LabelForSort(string headerText, string fieldName)
+    {
+        string sortField = Model.Pager.SortField ?? "Id"; // default value
+        string sortOrder = Model.Pager.SortOrder ?? Constants.SortOrderAsc; // default value
+
+        <a href="javascript:;" onclick="sortField('@fieldName');return false;">
+            @headerText
+            @if (fieldName.ToLower().Equals(sortField.ToLower()))
+            {
+                if (sortOrder.Equals(Constants.SortOrderAsc))
+                {<i class="fa fa-sort-asc"></i>}
+                else
+                {<i class="fa fa-sort-desc"></i> }
+            }
+            else
+            {<i class="fa fa-sort"></i>}
+        </a>
+}
+
+@{
+    if (hasData)
+    {
+        <div class="form-inline nopadding">
+            @{ Html.RenderPartial("~/Views/Shared/_TablePaging.cshtml", Model.Pager); }
+        </div>
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap" style="width:70px;">Action</th>
+                        <th class="center text-nowrap">@LabelForSort("File Name", "FileName")</th>
+                        <th class="text-nowrap">@LabelForSort("Transaction Record", "RecordCount")</th>
+                        <th class="center text-nowrap">@LabelForSort("วันที่ Upload ล่าสุด", "UploadDate")</th>
+                        <th class="center text-nowrap">@LabelForSort("วันที่ Update เข้า Do not call list", "UpdateDate")</th>
+                        <th class="text-nowrap">ชื่อผู้ Upload</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Results)
+                    {
+                        <tr>
+                            <td class="center text-nowrap">
+                                <a href="javascript:;" class="view" title="view" onclick="view('@item.Id');"></a>
+                            </td>
+                            <td class="center">@item.FileName</td>
+                            <td class="center">@item.RecordCount</td>
+                            <td class="center">@item.DisplayUploadDate</td>
+                            <td class="center">@item.DisplayUpdateDate</td>
+                            <td class="center">@item.LastUpdateBy.DisplayName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <script>
+            var url_ViewUploadList= '@Url.Action("ViewUploadList", "DoNotCall")';
+            var ASC = '@Constants.SortOrderAsc';
+            var DESC = '@Constants.SortOrderDesc';
+            $jq(function () {
+                initializeTablePaging(searchFilter, successFilter, loadData);
+            });
+
+            function view(id) {
+                openWindowWithParams(url_ViewUploadList, true, [{ Name: "id", Value: id }]);
+            }
+
+            function sortField(selectedSortField) {
+                if (selectedSortField == searchFilter.SortField)
+                    searchFilter.SortOrder = (searchFilter.SortOrder == ASC) ? DESC : ASC;
+                else
+                    searchFilter.SortOrder = ASC;
+                searchFilter.SortField = selectedSortField;
+                searchFilter.PageNo = 1;
+                loadData();
+            }
+
+        </script>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap" style="width:70px;">Action</th>
+                        <th class="center text-nowrap">File Name</th>
+                        <th class="text-nowrap">Transaction Record</th>
+                        <th class="center text-nowrap">วันที่ Upload ล่าสุด</th>
+                        <th class="center text-nowrap">วันที่ Update เข้า Do not call list</th>
+                        <th class="text-nowrap">ชื่อผู้ Upload</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="center">@Resource.Msg_NoRecords</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+}

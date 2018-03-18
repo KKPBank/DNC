@@ -1,0 +1,210 @@
+﻿@model CSM.Entity.DoNotCallLoadListSearchFilter
+@using CSM.Common.Resources;
+@{
+    ViewBag.Title = Resource.Lbl_SearchDoNotCallLoadList;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section MainMenu
+{
+    @Html.Action("MainMenu", "MenuNavigator", new { selectedMenu = CSM.Entity.MenuCode.DoNotCall })
+}
+
+@section Breadcrumb {
+    <strong class="font-blue">@Resource.Lbl_DoNotCall</strong>
+    <strong class="font-green-jungle">&rsaquo;&rsaquo; @Resource.Lbl_SearchDoNotCallLoadList</strong>
+}
+
+@using (Html.BeginForm("SearchUploadList", "DoNotCall", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div id="div_form" class="form-box">
+        <h5 class="form-title">@Resource.Lbl_SearchDoNotCallLoadList</h5>
+        <div class="row margin-top-15">
+            <div class="col-xs-12">
+                <div class="row form-group">
+                    <label class="col-sm-2 col-md-2 control-label form-label">
+                        @Html.DisplayNameFor(m => m.FromDate):
+                    </label>
+                    <div class="col-sm-5 col-md-4 nopadding">
+                        <div class="col-xs-5 nopadding">
+                            <div class='input-group date' id='dvFromDate'>
+                                @Html.TextBoxFor(model => model.FromDate, new
+                                {
+                                    @class = "form-control input-sm",
+                                    @id = "txtFromDate",
+                                    @onchange = "validateDateValue($jq(this));"
+                                })
+                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.FromDate)
+                        </div>
+                        <div class="col-xs-2 control-label form-label-center">
+                            @Html.LabelFor(model => model.ToDate)
+                        </div>
+                        <div class="col-xs-5 nopadding">
+                            <div class='input-group date' id='dvToDate'>
+                                @Html.TextBoxFor(model => model.ToDate, new
+                                {
+                                    @class = "form-control input-sm",
+                                    @id = "txtToDate",
+                                    @onchange = "validateDateValue($jq(this));"
+                                })
+                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ToDate)
+                        </div>
+                        <div class="dvDateRange clear"></div>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <label class="col-sm-2 control-label form-label">
+                        @Html.DisplayNameFor(model => model.FileName):
+                    </label>
+                    <div class="col-sm-4 col-md-2 nopadding">
+                        @Html.TextBoxFor(model => model.FileName, new
+                        {
+                            @class = "form-control input-sm",
+                            id = "txtFileName"
+                        })
+                        @Html.ValidationMessageFor(model => model.FileName)
+                    </div>
+                    <label class="col-sm-2 col-md-2 col-lg-1 control-label form-label text-right">
+                        @Html.DisplayNameFor(model => model.FileStatusId):
+                    </label>
+                    <div class="col-sm-2 col-md-1 nopadding">
+                        @Html.DropDownListFor(model => model.FileStatusId, new List<SelectListItem>(ViewBag.FileStatusList), "All", new { @class = "form-control input-sm", @id = "ddlFileStatus" })
+                    </div>
+                </div>
+                <div class="panel-actions">
+                    <div class="pull-left">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <button onclick="onNewUpload()" type="button" style="width:100px;" class="btn btn-green btn-sm">
+                                    New Upload
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <button onclick="downloadForm()" type="button" style="width:110px;" class="btn btn-gray btn-sm">
+                                    Download Form
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <div class="form-inline">
+                            <div class="form-group">
+                                <button onclick="onSearch(event)" type="button" class="btn btn-blue btn-sm btn-xsmall">
+                                    <i class="fa fa-search"></i>&nbsp;Search
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <button onclick="onClearSearch()" type="button" class="btn btn-gray btn-sm btn-xsmall">Clear</button>
+                            </div>
+                            <div class="form-group">
+                                <button onclick="window.close()" type="button" class="btn btn-gray btn-sm btn-xsmall">Back</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="clear"></div>
+<div id="dvSearchResult">
+</div>
+
+<div id="dvTarget"></div>
+@section masterjs
+{
+    @Scripts.Render("~/Scripts/DoNotCall.js")
+    <script>
+        var pager;
+        var lastPager;
+        var searchFilter;
+        var successFilter;
+        var url_SearchFileUploadList = '@Url.Action("SearchFileUploadList", "DoNotCall")';
+        var url_DownloadForm = '@Url.Action("DownloadForm", "DoNotCall")';
+        var url_UploadList = '@Url.Action("UploadList", "DoNotCall")';
+
+        $jq(function () {
+            initializeDatePicker("#dvFromDate", onFromDateChange);
+            initializeDatePicker("#dvToDate", onToDateChange);
+            initializeSearchFilter();
+        });
+
+        function onNewUpload() {
+            openNewWindow(url_UploadList, true);
+        }
+
+        function downloadForm() {
+            openNewWindow(url_DownloadForm);
+        }
+
+        function initializeSearchFilter() {
+            searchFilter = {};
+            setFilterInput();
+            setupFilterPaging();
+            successFilter = searchFilter;
+        };
+
+        function setFilterInput() {
+            var fromDate = $jq("#dvFromDate").datepicker('getDate');
+            var toDate = $jq("#dvToDate").datepicker('getDate');
+            searchFilter.FileName = $jq("#txtFileName").val();
+            searchFilter.FromDate = fromDate != null ? fromDate.toISOString() : null;
+            searchFilter.ToDate = toDate != null ? toDate.toISOString() : null;
+            searchFilter.FileStatusId = $jq("#ddlFileStatus").val();
+        }
+
+        function setupFilterPaging() {
+            searchFilter.PageNo = '@Model.PageNo';
+            searchFilter.PageSize = '@Model.PageSize';
+            searchFilter.SortField = '@Model.SortField';
+            searchFilter.SortOrder = '@Model.SortOrder';
+        }
+
+        function onSearch() {
+            clearServerErrors();
+            setFilterInput();
+            loadData();
+        }
+
+        function loadData() {
+            callAjaxPost(url_SearchFileUploadList, searchFilter, onSearchSuccess);
+        }
+
+        function onSearchSuccess(result) {
+            if (result.Valid == null) {
+                $jq("#dvSearchResult").html('');
+                successFilter = searchFilter;
+                $jq("#dvSearchResult").html(result);
+            } else {
+                showServerErrors(result);
+            }
+        }
+
+        function onClearSearch() {
+            clearServerErrors();
+            $jq("#txtFileName").val("");
+            $jq("#txtFromDate").val("");
+            $jq("#dvFromDate").datepicker('setDate', '');
+            $jq("#txtToDate").val("");
+            $jq("#dvToDate").datepicker('setDate', '');
+            $jq("#ddlFileStatus").val("");
+            initializeSearchFilter();
+            $jq("#dvSearchResult").html('');
+        }
+
+        function onFromDateChange(ev) {
+            $jq(this).datepicker('hide');
+        }
+
+        function onToDateChange(ev) {
+            $jq(this).datepicker('hide');
+        }
+
+    </script>
+}

@@ -1,0 +1,153 @@
+﻿@model CSM.Entity.DoNotCallBlockSalesModel
+@using CSM.Common.Resources
+@using CSM.Common.Utilities
+
+<style>
+    #divSalesProductTable {
+        max-height: 100px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+</style>
+
+<div class="section_panel">
+    <strong class="font-blue">@Resource.Lbl_SalesEngWithThaiTranslation</strong>
+    <div class="row margin-top-15">
+        <div class="row form-group">
+            <label class="col-sm-3">@Html.CheckBoxFor(m => m.IsBlockSalesTelephone, new { id = "chkIsBlockSalesTelephone" }) @Html.DisplayNameFor(m => m.IsBlockSalesTelephone)</label>
+            <label class="col-sm-3">@Html.CheckBoxFor(m => m.IsBlockSalesSms, new { id = "chkIsBlockSalesSms" }) @Html.DisplayNameFor(m => m.IsBlockSalesSms)</label>
+            <label class="col-sm-3">@Html.CheckBoxFor(m => m.IsBlockSalesEmail, new { id = "chkIsBlockSalesEmail" }) @Html.DisplayNameFor(m => m.IsBlockSalesEmail)</label>
+        </div>
+        <div class="row form-group">
+            <label class="col-sm-3 col-md-2">@Html.CheckBoxFor(m => m.IsBlockAllSalesProducts, new { id = "chkIsBlockAllSalesProducts" }) @Html.DisplayNameFor(m => m.IsBlockAllSalesProducts)</label>
+            <div class="col-sm-4 col-md-3 nopadding">
+                <input type="text" id="txtSalesProduct" maxlength="100" class="form-control input-sm input-medium" />
+            </div>
+            <div class="col-sm-3 col-md-2 nopadding">
+                <button id="btnAddSalesProduct" type="button" class="btn btn-green btn-sm" onclick="onAddNewSalesProduct()">Add Product</button>
+            </div>
+        </div>
+        <div class="padding-left-15">
+            @Html.HiddenFor(m => m.BlockSalesProductList)
+            @Html.ValidationMessageFor(m => m.BlockSalesProductList)
+        </div>
+        <div class="row form-group">
+            <div id="divSalesProductTable" class="table-responsive">
+                <table id="tblBlockSalesProduct" class="table datatable">
+                    <thead>
+                        <tr>
+                            <th class="center text-nowrap" width="80">Action</th>
+                            <th class="center text-nowrap">Product</th>
+                            <th class="center text-nowrap" width="110">Status</th>
+                            <th class="center text-nowrap">Update By</th>
+                            <th class="center text-nowrap" width="170">Update Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{ 
+                            foreach (var item in Model.BlockSalesProductList)
+                            {
+                        <tr class="existingData">
+                            <td class='center'>
+                                @if (!item.IsDeleted)
+                                {
+                                    <a href='javascript:;' class='delete-active' title='delete' onClick='onClickDeleteSalesProductRow(this, @item.Id, @item.ActivityProductId)'></a>
+                                }
+                            </td>
+                            <td>@item.Name</td>
+                            <td class="center">@item.Status</td>
+                            <td>@item.UpdateBy.DisplayName</td>
+                            <td class='center'>@item.DisplayUpdateDate</td>
+                        </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var sales = {};
+    var blockSalesProductList = [];
+
+    $jq(function () {
+        initAutoCompleteProduct($jq("#txtSalesProduct"), getExistingSalesProductIdList);
+        $jq("#chkIsBlockAllSalesProducts").on("click", onClickBlockAllSalesProducts);
+        toggleSalesProductInput();
+        @foreach (var item in Model.BlockSalesProductList)
+        {
+            @:blockSalesProductList.push({ Id: @item.Id, CreateDate: '@item.CreateDate', UpdateDate: '@item.UpdateDate', ActivityProductId: @item.ActivityProductId, IsDeleted: @Json.Encode(item.IsDeleted), Name: '@item.Name' });
+        }
+    });
+
+    function onClickBlockAllSalesProducts() {
+        var checkBox = $jq("#chkIsBlockAllSalesProducts");
+        if (checkBox.prop("checked") && hasActiveProducts(blockSalesProductList)) {
+            if (confirm('ต้องการลบข้อมูล product ทั้งหมดหรือไม่')) {
+                toggleSalesProductInput();
+            } else {
+                checkBox.prop("checked", false);
+            }
+        } else {
+            toggleSalesProductInput();
+        }
+    }
+
+    function getExistingSalesProductIdList() {
+        var result = [];
+        $jq.each(blockSalesProductList, function () {
+            if (!this.IsDeleted) {
+                result.push(this.Id);
+            }
+        });
+
+        return result;
+    }
+
+    function onClickDeleteSalesProductRow(element, productId, activityProductId) {
+        onDeleteProduct(element, productId, activityProductId, blockSalesProductList);
+    }
+
+    function toggleSalesProductInput() {
+        var ddlProduct = $jq("#txtSalesProduct");
+        var btnAddProduct = $jq("#btnAddSalesProduct");
+        var tblBlockProducts = $jq("#tblBlockSalesProduct");
+        var isBlockAll = $jq("#chkIsBlockAllSalesProducts").prop("checked");
+        var productName = $jq("#s2id_txtSalesProduct .select2-chosen");
+
+        btnAddProduct.prop("disabled", isBlockAll);
+
+        if (isBlockAll) {
+            deleteAllGridProducts("tblBlockSalesProduct", blockSalesProductList);
+            tblBlockProducts.hide();
+            ddlProduct.select2("disable");
+            ddlProduct.select2("val", "");
+            productName.text("Block All Products");
+        } else {
+            ddlProduct.select2("enable");
+            productName.text(sales.autoCompletePlaceHolder);
+            tblBlockProducts.show();
+        }
+    }
+
+    function onAddNewSalesProduct() {
+        // Check autocomplete value
+        var selectedProductId = $jq("#txtSalesProduct").val();
+        if (selectedProductId != "") {
+            // Check if the item is already on the list
+            if (!isExistingProduct(selectedProductId, blockSalesProductList)) {
+                // Add to list
+                var productName = $jq("#s2id_txtSalesProduct .select2-chosen").text();
+                var now = new Date();
+                blockSalesProductList.push(createNewProductModel(selectedProductId, productName, now));
+                // Add row to table
+                var html = generateNewProductRow(selectedProductId, productName, now, "onClickDeleteSalesProductRow");
+                $jq("#tblBlockSalesProduct tbody").prepend(html);
+            }
+        } else {
+            doModal('dvAlertMsg', 'Message Dialog', 'กรุณาเลือก Product', '', '');
+        }
+    }
+</script>

@@ -1,0 +1,519 @@
+﻿@model CSM.Web.Models.DoNotCallViewModel
+@using CSM.Common.Resources;
+@using CSM.Common.Utilities;
+@{
+    ViewBag.Title = Resource.Lbl_SearchDoNotCallList;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section MainMenu
+{
+    @Html.Action("MainMenu", "MenuNavigator", new { selectedMenu = CSM.Entity.MenuCode.DoNotCall })
+}
+
+@section Breadcrumb {
+    <strong class="font-blue">@Resource.Lbl_DoNotCall</strong>
+    <strong class="font-green-jungle">&rsaquo;&rsaquo; @Resource.Lbl_SearchDoNotCallList</strong>
+}
+
+@helper GenerateFormLabel(MvcHtmlString displayText)
+    {
+        <label class="col-sm-5 control-label form-label">@displayText:</label>
+}
+
+@using (Html.BeginForm("Search", "DoNotCall", FormMethod.Post, new { id = "frm_search", DefaultButton = "btn_search" }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+    <div id="div_form" class="form-box">
+        <h5 class="form-title">Search Do Not Call List</h5>
+        <div class="row margin-top-15">
+            <div class="col-sm-6">
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.FromDate))
+                    <div class="col-sm-7 nopadding">
+                        <div class="clear"></div>
+                        <div class="col-sm-5 nopadding">
+                            <div class='input-group date' id='dvFromDate'>
+                                @Html.TextBoxFor(model => model.SearchFilter.FromDate, new
+                                {
+                                    @class = "form-control input-sm",
+                                    @id = "txtFromDate",
+                                    @onchange = "validateDateValue($jq(this));"
+                                })
+                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.SearchFilter.FromDate)
+                        </div>
+                        <div class="col-sm-2 control-label form-label-center">
+                            @Html.LabelFor(model => model.SearchFilter.ToDate)
+                        </div>
+                        <div class="col-sm-5 nopadding">
+                            <div class='input-group date' id='dvToDate'>
+                                @Html.TextBoxFor(model => model.SearchFilter.ToDate, new
+                                {
+                                    @class = "form-control input-sm",
+                                    @id = "txtToDate",
+                                    @onchange = "validateDateValue($jq(this));"
+                                })
+                                <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.SearchFilter.ToDate)
+                        </div>
+                        <div class="dvDateRange clear"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <!--Left Side-->
+            <div class="col-sm-6">
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.DoNotCallListStatusId))
+                    <div class="col-sm-7 nopadding">
+                        @Html.DropDownListFor(model => model.SearchFilter.DoNotCallListStatusId, new List<SelectListItem>(ViewBag.DoNotCallListStatus), Resource.Ddl_PleaseSelect, new { @class = "form-control input-sm", @id = "ddlDoNotCallListStatusId" })
+                    </div>
+                </div>
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.SubscriptionTypeId))
+                    <div class="col-sm-7 nopadding">
+                        @Html.DropDownListFor(model => model.SearchFilter.SubscriptionTypeId, new List<SelectListItem>(ViewBag.SubscriptionTypeList), Resource.Ddl_PleaseSelect, new { @class = "form-control input-sm", @id = "ddlSubscriptionTypeId" })
+                    </div>
+                </div>
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.FirstName))
+                    <div class="col-sm-7 nopadding">
+                        @Html.TextBoxFor(model => model.SearchFilter.FirstName, new
+                        {
+                            @class = "form-control input-sm",
+                            id = "txtFirstName"
+                        })
+                        @Html.ValidationMessageFor(model => model.SearchFilter.FirstName)
+                    </div>
+                </div>
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.Telephone))
+                    <div class="col-sm-7 nopadding">
+                        @Html.TextBoxFor(model => model.SearchFilter.Telephone, new
+                        {
+                            @class = "form-control input-sm",
+                            id = "txtTelephone",
+                        })
+                        @Html.ValidationMessageFor(model => model.SearchFilter.Telephone)
+                    </div>
+                </div>
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.UpdateBranchId))
+                    <div class="col-sm-7 nopadding">
+                        <input type="text" class="form-control input-sm" id="txtCreatorOrUpdateBranchId" />
+                    </div>
+                </div>
+            </div>
+            <!--Right Side-->
+            <div class="col-sm-6">
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.TransactionType))
+                    <div class="col-sm-7 nopadding">
+                        @Html.DropDownListFor(model => model.SearchFilter.TransactionType, new List<SelectListItem>(ViewBag.TransactionTypeList), Resource.Ddl_PleaseSelect, new { @class = "form-control input-sm", @id = "ddlType" })
+                    </div>
+                </div>
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.CardNo))
+                    <div class="col-sm-7 nopadding">
+                        @Html.TextBoxFor(model => model.SearchFilter.CardNo, new
+                        {
+                            @class = "form-control input-sm",
+                            id = "txtCardNo",
+                        })
+                        @Html.ValidationMessageFor(model => model.SearchFilter.CardNo)
+                    </div>
+                </div>
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.LastName))
+                    <div class="col-sm-7 nopadding">
+                        @Html.TextBoxFor(model => model.SearchFilter.LastName, new
+                        {
+                            @class = "form-control input-sm",
+                            id = "txtLastName",
+                        })
+                        @Html.ValidationMessageFor(model => model.SearchFilter.LastName)
+                    </div>
+                </div>
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.Email))
+                    <div class="col-sm-7 nopadding">
+                        @Html.TextBoxFor(model => model.SearchFilter.Email, new
+                        {
+                            @class = "form-control input-sm",
+                            id = "txtEmail",
+                        })
+                        @Html.ValidationMessageFor(model => model.SearchFilter.Email)
+                    </div>
+                </div>
+                <div class="row form-group">
+                    @GenerateFormLabel(Html.DisplayNameFor(m => m.SearchFilter.UpdateUser))
+                    <div class="col-sm-7 nopadding">
+                        <input type="text" class="form-control input-sm" id="txtCreatorOrUpdateUser" disabled="disabled" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div class="panel-actions">
+        <div class="pull-left">
+            <button id="btnAdd" type="button" data-toggle="modal" data-target="#modalNewDoNotCallBlockType" style="width:100px;" class="btn btn-green btn-sm">
+                <i class="fa fa-plus"></i>&nbsp;New
+            </button>
+        </div>
+        <div class="pull-right">
+            <div class="form-inline">
+                <div class="form-group">
+                    <button id="btn_export" onclick="onExportData()" type="button" disabled="true" class="btn btn-gray btn-sm">Export Data</button>
+                </div>
+                <div class="form-group">
+                    <button id="btn_import" onclick="onImportData()" type="button" class="btn btn-gray btn-sm">Import Data</button>
+                </div>
+                <div class="form-group">
+                    <button id="btn_search" onclick="onSearch(event)" type="submit" class="btn btn-blue btn-sm btn-xsmall">
+                        <i class="fa fa-search"></i>&nbsp;Search
+                    </button>
+                </div>
+                <div class="form-group">
+                    <button id="btn_clear" onclick="onClearSearch()" type="button" class="btn btn-gray btn-sm btn-xsmall">Clear</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    <div id="dvSearchResult">
+    </div>
+    <div id="dvTarget"></div>
+
+    <!--Modal New-->
+    <div class="modal" role="dialog" id="modalNewDoNotCallBlockType">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button class="close" aria-hidden="true" data-dismiss="modal" type="button">×</button>
+                    <h4 class="modal-title">เลือกระดับการ Block</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-horizontal">
+                        <div class="radio-group">
+                            <div class="row">
+                                <div class="form-group">
+                                    <div class="col-xs-offset-5">
+                                        @Html.RadioButton("rdoDoNotCallBlockType", "1", true, new { id = "rdoTypeCustomer" })
+                                        <label for="rdoTypeCustomer" class="control-label form-label">@Resource.Lbl_Customer</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group center">
+                                    <div class="col-xs-offset-5">
+                                        @Html.RadioButton("rdoDoNotCallBlockType", "2", false, new { id = "rdoTypePhone" })
+                                        <label for="rdoTypePhone" class="control-label form-label">@Resource.Lbl_PhoneNoEng</label><br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div class="form-group text-right">
+                        <button onclick="onConfirmCreateDoNotCall()" type="button" class="btn btn-blue btn-sm btn-xsmall">OK</button>
+                        &nbsp;
+                        <button onclick="closeModal()" type="button" class="btn btn-gray btn-sm btn-xsmall">Cancel</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section masterjs
+{
+    @Scripts.Render("~/Scripts/DoNotCall.js")
+    <script type="text/javascript">
+        var AUTOCOMPLETE_PLACEHOLDER = '@Resource.Ddl_AutoComplete';
+        var AUTOCOMPLETE_MIN_LENGTH = '@Constants.MinLenght.AutoComplete';
+        var url_SearchDoNotCall = '@Url.Action("SearchDoNotCall", "DoNotCall")';
+        var url_AutoCompleteSearchUser = "@Url.Action("AutoCompleteSearchUser", "AutoComplete")";
+        var url_AutocompleteSearchBranch = "@Url.Action("AutoCompleteSearchBranch", "AutoComplete")";
+        var url_ExportList = "@Url.Action("ExportList", "DoNotCall")";
+        var url_PrintDoNotCallListExcel = "@Url.Action("PrintDoNotCallListExcel", "DoNotCall")";
+        var url_CreateCustomer = "@Url.Action("CreateCustomer", "DoNotCall")";
+        var url_CreatePhoneNo = "@Url.Action("CreatePhoneNo", "DoNotCall")";
+        var url_EditPhoneNo = '@Url.Action("EditPhoneNo", "DoNotCall")';
+        var url_EditCustomer = '@Url.Action("EditCustomer", "DoNotCall")';
+        var url_SearchUploadList = '@Url.Action("SearchUploadList", "DoNotCall")';
+        var ASC = '@Constants.SortOrderAsc';
+        var DESC = '@Constants.SortOrderDesc';
+        var trans_type_customer = '@Constants.DNC.TransactionTypeCustomer';
+        var trans_type_telephone = '@Constants.DNC.TransactionTypeTelephone';
+        var searchFilter;
+        var successFilter;
+
+        $jq(function () {
+            initAutoCompleteCreatorBranch();
+            initAutoCompleteCreatorUser();
+            initializeDatePicker("#dvFromDate", onFromDateChange);
+            initializeDatePicker("#dvToDate", onToDateChange);
+            initializeSearchFilter();
+            $jq("#modalNewDoNotCallBlockType").on('hidden.bs.modal', resetRadioSelect);
+        });
+
+        function onImportData() {
+            openNewWindow(url_SearchUploadList, true);
+        }
+
+        function initDoNotCallEdit(id, transactionType) {
+            switch (transactionType) {
+                case trans_type_customer:
+                    openEditCustomerWindow(url_EditCustomer, true, id);
+                    break;
+                case trans_type_telephone:
+                    openEditPhoneNoWindow(url_EditPhoneNo, true, id);
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        function resetRadioSelect() {
+            $jq("#rdoTypeCustomer").prop("checked", true);
+        }
+
+        function onSearch(e) {
+            e.preventDefault();
+            clearServerErrors();
+            setFilterInput();
+            loadData();
+        }
+
+        function loadData() {
+            if (validateSearchFilters()) {
+                callAjaxSearch();
+            }
+        }
+
+        function onConfirmCreateDoNotCall() {
+            //Redirect to create page
+            var isBlockTypeCustomer = $jq("#rdoTypeCustomer").prop("checked");
+            if (isBlockTypeCustomer)
+                openNewWindow(url_CreateCustomer, true);
+            else
+                openNewWindow(url_CreatePhoneNo, true);
+            closeModal();
+        }
+
+        function closeModal() {
+            $jq('#modalNewDoNotCallBlockType').modal('hide');
+        }
+
+        function sortField(selectedSortField) {
+            if (selectedSortField == searchFilter.SortField)
+                searchFilter.SortOrder = (searchFilter.SortOrder == ASC) ? DESC : ASC;
+            else
+                searchFilter.SortOrder = ASC;
+            searchFilter.SortField = selectedSortField;
+            searchFilter.PageNo = 1;
+            callAjaxSearch();
+        }
+
+        function onExportData() {
+            callAjaxPost(url_ExportList, searchFilter, onSuccessExportData);
+        }
+
+        function callAjaxSearch() {
+            callAjaxPost(url_SearchDoNotCall, searchFilter, onSearchSuccess);
+        }
+
+        function onSearchSuccess(result) {
+            if (result.Valid == null) {
+                $jq("#dvSearchResult").html('');
+                successFilter = searchFilter;
+                $jq("#dvSearchResult").html(result);
+                toggleExportButton($jq("#tblDoNotCallList tbody tr").length === 0);
+            } else {
+                showServerErrors(result);
+            }
+        }
+
+        function toggleExportButton(disable) {
+            $jq("#btn_export").prop("disabled", disable);
+        }
+
+        function onSuccessExportData(result) {
+            if (result.Valid == true) {
+                var url = url_PrintDoNotCallListExcel;
+                openNewWindow(url);
+                return;
+            } else {
+                showServerErrors(result);
+            }
+        }
+
+        function initializeSearchFilter() {
+            searchFilter = {};
+            setFilterInput();
+            setupFilterPaging();
+            successFilter = searchFilter;
+        };
+
+        function clearAutoComplete() {
+            $jq("#txtCreatorOrUpdateBranchId").select2("val", "");
+            $jq("#txtCreatorOrUpdateUser").select2("val", "");
+            $jq("#txtCreatorOrUpdateUser").select2("disable");
+        }
+
+        function setFilterInput() {
+            var fromDate = $jq("#dvFromDate").datepicker('getDate');
+            var toDate = $jq("#dvToDate").datepicker('getDate');
+            searchFilter.FirstName = $jq("#txtFirstName").val();
+            searchFilter.LastName = $jq("#txtLastName").val();
+            searchFilter.FromDate = fromDate != null ? fromDate.toISOString(): null;
+            searchFilter.ToDate = toDate != null ? toDate.toISOString() : null;
+            searchFilter.SubscriptionTypeId = $jq("#ddlSubscriptionTypeId").val();
+            searchFilter.CardNo = $jq("#txtCardNo").val();
+            searchFilter.Telephone = $jq("#txtTelephone").val();
+            searchFilter.Email = $jq("#txtEmail").val();
+            searchFilter.DoNotCallListStatusId = $jq("#ddlDoNotCallListStatusId").val();
+            searchFilter.TransactionType = $jq("#ddlType").val();
+            searchFilter.CreatorOrUpdateBranchId = $jq("#txtCreatorOrUpdateBranchId").val();
+            searchFilter.CreatorOrUpdateUser = $jq("#txtCreatorOrUpdateUser").val();
+        }
+
+        function setupFilterPaging() {
+            searchFilter.PageNo = '@Model.SearchFilter.PageNo';
+            searchFilter.PageSize = '@Model.SearchFilter.PageSize';
+            searchFilter.SortField = '@Model.SearchFilter.SortField';
+            searchFilter.SortOrder = '@Model.SearchFilter.SortOrder';
+        }
+
+        function validateSearchFilters() {
+            var noFilter = searchFilter.FirstName == ""
+                && searchFilter.LastName == ""
+                && searchFilter.FromDate == null
+                && searchFilter.ToDate == null
+                && searchFilter.SubscriptionTypeId == ""
+                && searchFilter.CardNo == ""
+                && searchFilter.Telephone == ""
+                && searchFilter.Email == ""
+                && searchFilter.DoNotCallListStatusId == ""
+                && searchFilter.TransactionType == ""
+                && searchFilter.CreatorOrUpdateBranchId == ""
+                && searchFilter.CreatorOrUpdateUser == "";
+            if (noFilter) {
+                var warningMsg = '@Resource.Msg_EnteredAtLeastOneCriteria';
+                doModal('dvAlertMsg', 'Message Dialog', warningMsg, '', '');
+                return false;
+            }
+            return true;
+        }
+
+        function onClearSearch() {
+            $jq("#txtFirstName").val("");
+            $jq("#txtLastName").val("");
+            $jq("#txtFromDate").val("");
+            $jq("#dvFromDate").datepicker('setDate', '');
+            $jq("#txtToDate").val("");
+            $jq("#dvToDate").datepicker('setDate', '');
+            $jq("#ddlSubscriptionTypeId").val("");
+            $jq("#txtCardNo").val("");
+            $jq("#txtTelephone").val("");
+            $jq("#txtEmail").val("");
+            $jq("#ddlDoNotCallListStatusId").val("");
+            $jq("#ddlType").val("");
+            clearAutoComplete();
+            initializeSearchFilter();
+            $jq("#dvSearchResult").html('');
+            toggleExportButton(true);
+            clearServerErrors();
+        }
+
+        function onFromDateChange(ev) {
+            $jq(this).datepicker('hide');
+        }
+
+        function onToDateChange(ev) {
+            $jq(this).datepicker('hide');
+        }
+
+        function initAutoCompleteCreatorBranch() {
+            $jq("#txtCreatorOrUpdateBranchId").select2({
+                placeholder: AUTOCOMPLETE_PLACEHOLDER,
+                minimumInputLength: AUTOCOMPLETE_MIN_LENGTH,
+                language: "th",
+                allowClear: true,
+                ajax: {
+                    url: url_AutocompleteSearchBranch,
+                    dataType: 'json',
+                    type: "post",
+                    quietMillis: 150,
+                    data: function (keyword) { return { keyword: keyword }; },
+                    results: function (data) {
+                        if (data.RedirectUrl != undefined) {
+                            topLocation(data.RedirectUrl);
+                            return;
+                        }
+                        return {
+                            results: $jq.map(data, function (item) {
+                                return {
+                                    text: item.BranchName,
+                                    id: item.BranchId
+                                }
+                            })
+                        };
+                    },
+                    error: handleAjaxError
+                }
+            }).on("change", function (evt) {
+                if ($jq(this).val().length != 0)
+                    $jq("#txtCreatorOrUpdateUser").select2("enable");
+                else {
+                    $jq("#txtCreatorOrUpdateUser").select2("disable");
+                    $jq("#txtCreatorOrUpdateUser").select2("val", "");
+                }
+            });
+        }
+
+        function initAutoCompleteCreatorUser() {
+            $jq("#txtCreatorOrUpdateUser").select2({
+                placeholder: AUTOCOMPLETE_PLACEHOLDER,
+                minimumInputLength: AUTOCOMPLETE_MIN_LENGTH,
+                language: "th",
+                allowClear: true,
+                ajax: {
+                    url: url_AutoCompleteSearchUser,
+                    dataType: 'json',
+                    type: "post",
+                    quietMillis: 150,
+                    data: function (keyword) {
+                        return {
+                            keyword: keyword,
+                            branchId: $jq("#txtCreatorOrUpdateBranchId").val()
+                        };
+                    },
+                    results: function (data) {
+                        if (data.RedirectUrl != undefined) {
+                            topLocation(data.RedirectUrl);
+                            return;
+                        }
+                        return {
+                            results: $jq.map(data, function (item) {
+                                return {
+                                    text: item.UserDisplayName,
+                                    id: item.UserId
+                                }
+                            })
+                        };
+                    },
+                    error: handleAjaxError
+                }
+            });
+        }
+
+    </script>
+}

@@ -1,0 +1,132 @@
+﻿@model CSM.Web.Models.DoNotCallByCustomerSearchResultViewModel
+
+@using CSM.Common.Resources
+
+@{
+    bool hasData = Model.Transactions.Count > 0;
+}
+
+@{
+    if (hasData)
+    {
+        <div class="form-inline nopadding">
+            @{ Html.RenderPartial("~/Views/Shared/_TablePaging.cshtml", Model.Pager); }
+        </div>
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap" style="width:70px;">Action</th>
+                        <th class="center text-nowrap" style="width:110px;">Transaction Date</th>
+                        <th class="center text-nowrap">Status</th>
+                        <th class="text-nowrap">Create By</th>
+                        <th class="text-nowrap">Card ID</th>
+                        <th class="text-nowrap">First Name</th>
+                        <th class="text-nowrap">Last Name</th>
+                        <th class="text-nowrap">Telephone</th>
+                        <th class="text-nowrap">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{int rowIndex = 1; }
+                    @foreach (var item in Model.Transactions)
+                    {
+                        string rowId = "act_" + (rowIndex++);
+                        <tr>
+                            <td class="center text-nowrap">
+                                <a href="javascript:;" class="edit-active" title="edit" onclick="editContactByCustomer('@item.Id');"></a>
+                            </td>
+                            <td class="center">@item.DisplayCreateDate</td>
+                            <td class="center">@item.DisplayStatus</td>
+                            <td class="center">@item.CreateByName</td>
+                            <td class="center">@item.CardNo</td>
+                            <td class="center">@item.FirstName</td>
+                            <td class="center">@item.LastName</td>
+                            <td class="center">@item.PhoneNo</td>
+                            <td class="center">@item.Email</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <script>
+            var url_EditCustomer = '@Url.Action("EditCustomer", "DoNotCall")';
+            $jq(function () {
+                toggleInputs(false);
+                pager = {
+                    PageNo: @Model.Pager.PageNo,
+                    PageSize: @Model.Pager.PageSize
+                };
+
+                lastPager = pager;
+                initializeTablePaging(pager, lastPager, reloadTransactionList);
+            });
+
+            function editContactByCustomer(id) {
+                openWindowWithParams(url_EditCustomer, true, [{ Name: "id", Value: id }]);
+            }
+        </script>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap" style="width:70px;">Action</th>
+                        <th class="center text-nowrap" style="width:110px;">Transaction Date</th>
+                        <th class="center text-nowrap">Status</th>
+                        <th class="text-nowrap">Create By</th>
+                        <th class="text-nowrap">Card ID</th>
+                        <th class="text-nowrap">First Name</th>
+                        <th class="text-nowrap">Last Name</th>
+                        <th class="text-nowrap">Telephone</th>
+                        <th class="text-nowrap">Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="9" class="center">
+                            @Resource.Msg_NoRecords
+                            <a onclick="addNewDoNotCallByCustomer()" style="width:100px;" class="btn" >
+                                เพิ่มรายการ
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <script>
+            var url_ValidateNewCustomerCard = '@Url.Action("ValidateNewCustomerCard", "DoNotCall")';
+            var url_NewCustomer = '@Url.Action("NewCustomer", "DoNotCall")';
+            $jq(function () {
+                toggleInputs(true);
+            });
+
+            function addNewDoNotCallByCustomer() {
+                clearServerErrors();
+                var data = getNewCustomerData();
+                callAjaxPost(url_ValidateNewCustomerCard, data, onSuccessValidateCustomerCard)
+            }
+
+            function onSuccessValidateCustomerCard(result) {
+                var valid = result.Valid == null;
+
+                if (valid) {
+                    var params = [
+                        { Name: "CardNo", Value: $jq("#txtCardNo").val() },
+                        { Name: "SubscriptionTypeId", Value: $jq("#ddlSubscriptionType").val() },
+                    ];
+
+                    openWindowWithParams(url_NewCustomer, true, params);
+                } else {
+                    if (result.Errors != undefined) {
+                        var subscriptionError = result.Errors["SubscriptionTypeId"];
+                        toggelElementValidationError($jq("#ddlSubscriptionType"), subscriptionError == undefined);
+                    }
+                    showServerErrors(result);
+                }
+            }
+        </script>
+    }
+}

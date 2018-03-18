@@ -1,0 +1,297 @@
+﻿@model CSM.Entity.DoNotCallTransactionHistoryEntity
+@using CSM.Common.Resources
+@using CSM.Common.Utilities
+@{
+    ViewBag.Title = "ViewTransactionDetail";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section MainMenu
+{
+    @Html.Action("MainMenu", "MenuNavigator", new { selectedMenu = CSM.Entity.MenuCode.DoNotCall })
+}
+
+@section Breadcrumb {
+    <strong class="font-blue">@Resource.Lbl_DoNotCall</strong>
+    <strong class="font-green-jungle">&rsaquo;&rsaquo; Transaction Detail</strong>
+}
+
+<style>
+    .viewTable {
+        max-height: 100px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+</style>
+
+<div>
+    <div id="div_form" class="form-box">
+        <strong class="font-blue">Type: @Model.DisplayTransactionType, </strong>
+        <strong class="font-blue">Version No: @Model.VersionNo</strong>
+        <!--Card ID section-->
+        <div class="section_panel">
+            <div class="row margin-top-15">
+                <div class="col-xs-12">
+                    <div class="row form-group">
+                        <label class="col-sm-2">@Html.DisplayNameFor(m => m.CardNo):</label>
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(m => m.CardNo)
+                        </div>
+                        <label class="col-sm-2">@Html.DisplayNameFor(m => m.CardTypeName):</label>
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(m => m.CardTypeName)
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-sm-2">@Html.DisplayNameFor(m => m.BaseInfo.FirstName):</label>
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(m => m.BaseInfo.FirstName)
+                        </div>
+                        <label class="col-sm-2">@Html.DisplayNameFor(m => m.BaseInfo.LastName):</label>
+                        <div class="col-sm-4">
+                            @Html.DisplayFor(m => m.BaseInfo.LastName)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--Sales-->
+        <div class="section_panel">
+            <strong class="font-blue">@Resource.Lbl_SalesEngWithThaiTranslation</strong>
+            <div class="row margin-top-15">
+                <div class="row form-group">
+                    <label class="col-sm-3">@Html.CheckBoxFor(m => m.BlockSalesModel.IsBlockSalesTelephone, new { disabled = true }) @Html.DisplayNameFor(m => m.BlockSalesModel.IsBlockSalesTelephone)</label>
+                    <label class="col-sm-3">@Html.CheckBoxFor(m => m.BlockSalesModel.IsBlockSalesSms, new { disabled = true }) @Html.DisplayNameFor(m => m.BlockSalesModel.IsBlockSalesSms)</label>
+                    <label class="col-sm-3">@Html.CheckBoxFor(m => m.BlockSalesModel.IsBlockSalesEmail, new { disabled = true }) @Html.DisplayNameFor(m => m.BlockSalesModel.IsBlockSalesEmail)</label>
+                    <label class="col-sm-3">@Html.CheckBoxFor(m => m.BlockSalesModel.IsBlockAllSalesProducts, new { disabled = true }) @Html.DisplayNameFor(m => m.BlockSalesModel.IsBlockAllSalesProducts)</label>
+                </div>
+                @{
+                    if (Model.BlockSalesModel.BlockSalesProductList != null && Model.BlockSalesModel.BlockSalesProductList.Count > 0)
+                    {
+                        <div class="row form-group">
+                            <div class="viewTable table-responsive">
+                                <table class="table datatable">
+                                    <thead>
+                                        <tr>
+                                            <th class="center text-nowrap" width="35%">Product</th>
+                                            <th class="center text-nowrap" width="110">Status</th>
+                                            <th class="center text-nowrap">Update By</th>
+                                            <th class="center text-nowrap" width="170">Update Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            foreach (var item in Model.BlockSalesModel.BlockSalesProductList)
+                                            {
+                                                <tr>
+                                                    <td>@item.Name</td>
+                                                    <td class="center">@item.Status</td>
+                                                    <td>@item.UpdateBy.DisplayName</td>
+                                                    <td class="center">@item.DisplayUpdateDate</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <!--Sales-->
+        <div class="section_panel">
+            <strong class="font-blue">@Resource.Lbl_InformationEngWithThaiTranslation</strong>
+            <div class="row margin-top-15">
+                <div class="row form-group">
+                    <label class="col-sm-3">@Html.CheckBoxFor(m => m.BlockInfoModel.IsBlockInfoTelephone, new { disabled = true }) @Html.DisplayNameFor(m => m.BlockInfoModel.IsBlockInfoTelephone)</label>
+                    <label class="col-sm-3">@Html.CheckBoxFor(m => m.BlockInfoModel.IsBlockInfoSms, new { disabled = true }) @Html.DisplayNameFor(m => m.BlockInfoModel.IsBlockInfoSms)</label>
+                    <label class="col-sm-3">@Html.CheckBoxFor(m => m.BlockInfoModel.IsBlockInfoEmail, new { disabled = true }) @Html.DisplayNameFor(m => m.BlockInfoModel.IsBlockInfoEmail)</label>
+                    <label class="col-sm-3">@Html.CheckBoxFor(m => m.BlockInfoModel.IsBlockAllInfoProducts, new { disabled = true }) @Html.DisplayNameFor(m => m.BlockInfoModel.IsBlockAllInfoProducts)</label>
+                </div>
+                @{
+                    if (Model.BlockInfoModel.BlockInfoProductList != null && Model.BlockInfoModel.BlockInfoProductList.Count > 0)
+                    {
+                        <div class="row form-group">
+                            <div class="viewTable table-responsive">
+                                <table class="table datatable">
+                                    <thead>
+                                        <tr>
+                                            <th class="center text-nowrap" width="35%">Product</th>
+                                            <th class="center text-nowrap" width="110">Status</th>
+                                            <th class="center text-nowrap">Update By</th>
+                                            <th class="center text-nowrap" width="170">Update Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            foreach (var item in Model.BlockInfoModel.BlockInfoProductList)
+                                            {
+                                                <tr>
+                                                    <td>@item.Name</td>
+                                                    <td class="center">@item.Status</td>
+                                                    <td>@item.UpdateBy.DisplayName</td>
+                                                    <td class="center">@item.DisplayUpdateDate</td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        <div class="section_panel">
+            <div class="row margin-top-15">
+                <!--Telephone-->
+                <div class="row form-group">
+                    <div class="row form-group">
+                        <div class="table-responsive viewTable">
+                            <table class="table datatable">
+                                <thead>
+                                    <tr>
+                                        <th class="center text-nowrap" width="35%">Telephone</th>
+                                        <th class="center text-nowrap" width="110">Status</th>
+                                        <th class="center text-nowrap">Update By</th>
+                                        <th class="center text-nowrap" width="170">Update Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var item in Model.Telephones)
+                                        {
+                                            <tr>
+                                                <td>@item.PhoneNo</td>
+                                                <td class="center">@item.Status</td>
+                                                <td>@item.UpdateBy.DisplayName</td>
+                                                <td class="center">@item.LastUpdateDateStr</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section_panel">
+            <div class="row margin-top-15">
+                <!--Email-->
+                <div class="row form-group">
+                    <div class="row form-group">
+                        <div class="table-responsive viewTable">
+                            <table class="table datatable">
+                                <thead>
+                                    <tr>
+                                        <th class="center text-nowrap" width="35%">Email</th>
+                                        <th class="center text-nowrap" width="110">Status</th>
+                                        <th class="center text-nowrap">Update By</th>
+                                        <th class="center text-nowrap" width="170">Update Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{
+                                        foreach (var item in Model.Emails)
+                                        {
+                                            <tr>
+                                                <td>@item.Email</td>
+                                                <td class="center">@item.Status</td>
+                                                <td>@item.UpdateBy.DisplayName</td>
+                                                <td class="center">@item.LastUpdateDateStr</td>
+                                            </tr>
+                                        }
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="section_borderless_panel">
+            <div>
+                <!--Left Part-->
+                <div class="col-sm-6 nopadding">
+                    <div class="row form-group">
+                        <label class="col-sm-4">@Html.DisplayNameFor(m => m.BaseInfo.EffectiveDate):</label>
+                        <div class="col-sm-8 nopadding">
+                            <div class='input-group date'>
+                                @Html.DisplayFor(m => m.BaseInfo.DisplayEffectiveDate)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-sm-4">@Html.DisplayNameFor(m => m.BaseInfo.FromSystem):</label>
+                        <div class="col-sm-8 nopadding">
+                            @Html.DisplayFor(m => m.BaseInfo.FromSystem)
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-sm-4">@Html.DisplayNameFor(m => m.BaseInfo.CreateByName):</label>
+                        <div class="col-sm-8 nopadding">
+                            @Html.DisplayFor(m => m.BaseInfo.CreateByName)
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-sm-4">@Html.DisplayNameFor(m => m.BaseInfo.UpdateByName):</label>
+                        <div class="col-sm-8 nopadding">
+                            @Html.DisplayFor(m => m.BaseInfo.UpdateByName)
+                        </div>
+                    </div>
+                </div>
+                <!--Right Part-->
+                <div class="col-sm-6 nopadding">
+                    <div class="row form-group">
+                        <label class="col-sm-4">@Html.DisplayNameFor(m => m.BaseInfo.ExpireDate):</label>
+                        <div class="col-sm-8 nopadding">
+                            <div class='input-group date'>
+                                @Html.DisplayFor(m => m.BaseInfo.DisplayExpireDateAndStatus)
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-sm-4">@Html.DisplayNameFor(m => m.BaseInfo.DisplayStatus):</label>
+                        <div class="col-sm-8 nopadding">
+                            @Html.DisplayFor(m => m.BaseInfo.DisplayStatus)
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-sm-4">@Html.DisplayNameFor(m => m.BaseInfo.CreateDate):</label>
+                        <div class="col-sm-8 nopadding">
+                            @Model.BaseInfo.CreateDate.FormatDateTime(Constants.DateTimeFormat.DefaultFullDateTime)
+                        </div>
+                    </div>
+                    <div class="row form-group">
+                        <label class="col-sm-4">@Html.DisplayNameFor(m => m.BaseInfo.UpdateDate):</label>
+                        <div class="col-sm-8 nopadding">
+                            @Model.BaseInfo.UpdateDate.FormatDateTime(Constants.DateTimeFormat.DefaultFullDateTime)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="padding-left:15px;">
+            <div class="row form-group">
+                <label class="col-sm-1">@Html.DisplayNameFor(m => m.BaseInfo.Remark):</label>
+                <div class="col-sm-11">
+                    @Html.DisplayFor(m => m.BaseInfo.Remark)
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!--Button-->
+    <div class="panel-actions">
+        <div class="pull-right">
+            <div class="form-inline">
+                <div class="form-group">
+                    <button onclick="window.close()" type="button" class="btn btn-gray btn-sm btn-xsmall">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

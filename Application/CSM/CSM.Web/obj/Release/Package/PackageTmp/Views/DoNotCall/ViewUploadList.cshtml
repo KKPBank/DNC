@@ -1,0 +1,67 @@
+﻿@model CSM.Entity.DoNotCallFileUploadDetailModel
+@using CSM.Common.Resources;
+@{
+    ViewBag.Title = Resource.Lbl_UploadFileDetail;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section MainMenu
+{
+    @Html.Action("MainMenu", "MenuNavigator", new { selectedMenu = CSM.Entity.MenuCode.DoNotCall })
+}
+
+@section Breadcrumb {
+    <strong class="font-blue">@Resource.Lbl_DoNotCall</strong>
+    <strong class="font-green-jungle">&rsaquo;&rsaquo; @Resource.Lbl_UploadFileDetail</strong>
+}
+
+<div class="section_borderless_panel">
+    <section>
+        @Html.HiddenFor(m => m.FileUploadId, new { id = "hidFileUploadId" })
+        <div><label class="form-label">File Name:</label> @Model.FileName</div>
+        <div><label class="form-label">Transaction Date:</label> @Model.CrateDateDisplay</div>
+        <div><label class="form-label">Upload Result:</label> @Model.UploadResult</div>
+    </section>
+</div>
+
+<div id="dvDataList">
+    @{ Html.RenderPartial("~/Views/DoNotCall/_ListFileUploadData.cshtml", Model); }
+</div>
+
+<div class="panel-actions">
+    <div class="pull-right">
+        <div class="form-inline">
+            <div class="form-group">
+                <button onclick="window.close()" type="button" class="btn btn-gray btn-sm btn-xsmall">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section masterjs
+{
+    <script>
+        var searchFilter;
+        var successFilter;
+        var url_GetSortedFileDataList = '@Url.Action("GetSortedFileDataList", "DoNotCall")';
+
+        $jq(function () {
+        });
+
+        function loadData() {
+            searchFilter.Id = $jq("#hidFileUploadId").val();
+            callAjaxPost(url_GetSortedFileDataList, searchFilter, onSearchSuccess);
+        }
+
+        function onSearchSuccess(result) {
+            if (result.Valid == null) {
+                $jq("#dvDataList").html('');
+                successFilter = searchFilter;
+                $jq("#dvDataList").html(result);
+            } else {
+                showServerErrors(result);
+            }
+        }
+
+    </script>
+}

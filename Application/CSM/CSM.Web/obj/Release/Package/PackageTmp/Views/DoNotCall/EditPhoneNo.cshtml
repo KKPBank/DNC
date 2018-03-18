@@ -1,0 +1,45 @@
+﻿@model CSM.Entity.DoNotCallByTelephoneEntity
+@using CSM.Common.Resources
+@{
+    ViewBag.Title = Resource.Lbl_EditTelephone;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section MainMenu
+{
+    @Html.Action("MainMenu", "MenuNavigator", new { selectedMenu = CSM.Entity.MenuCode.DoNotCall })
+}
+
+@section Breadcrumb {
+    <strong class="font-blue">@Resource.Lbl_DoNotCall</strong>
+    <strong class="font-green-jungle">&rsaquo;&rsaquo; @Resource.Lbl_EditTelephone</strong>
+}
+
+@{
+    Html.RenderPartial("~/Views/DoNotCall/Shared/_EditTelephoneTransaction.cshtml", Model);
+}
+
+<div id="dvTarget"></div>
+
+@section masterjs{
+    @Scripts.Render("~/Scripts/DoNotCall.js")
+    <script type="text/javascript">
+        var url_SearchDoNotCall = '@Url.Action("Search", "DoNotCall")';
+        function onSaveSuccess(result) {
+            if (result.Valid == null) {
+                doAlertModal('dvAlertMsg', 'Success', "ดำเนินการสำเร็จ", 'redirectToSearch()');
+            } else {
+                if (result.Errors != undefined) {
+                    var subscriptionError = result.Errors["SubscriptionTypeId"];
+                    toggelElementValidationError($jq("#ddlSubscriptionType"), subscriptionError == undefined);
+                }
+                showServerErrors(result);
+                scrollToTop();
+            }
+        }
+
+        function redirectToSearch() {
+            redirectToUrl(url_SearchDoNotCall);
+        }
+    </script>
+}

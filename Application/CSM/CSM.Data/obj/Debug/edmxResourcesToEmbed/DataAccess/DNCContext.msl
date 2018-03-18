@@ -1,0 +1,258 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="DNCDBModelStoreContainer" CdmEntityContainer="DNCDBEntities">
+    <EntitySetMapping Name="TB_C_DNC_TIME_PERIOD">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_C_DNC_TIME_PERIOD">
+        <MappingFragment StoreEntitySet="TB_C_DNC_TIME_PERIOD">
+          <ScalarProperty Name="TIME_PERIOD_ID" ColumnName="TIME_PERIOD_ID" />
+          <ScalarProperty Name="TIME_PERIOD_FROM" ColumnName="TIME_PERIOD_FROM" />
+          <ScalarProperty Name="TIME_PERIOD_TO" ColumnName="TIME_PERIOD_TO" />
+          <ScalarProperty Name="EXECUTE_TIME" ColumnName="EXECUTE_TIME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_L_DNC_ACTION_LOG">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_L_DNC_ACTION_LOG">
+        <MappingFragment StoreEntitySet="TB_L_DNC_ACTION_LOG">
+          <ScalarProperty Name="DNC_ACTION_LOG_ID" ColumnName="DNC_ACTION_LOG_ID" />
+          <ScalarProperty Name="ACTION" ColumnName="ACTION" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="DNC_TRANSACTION_ID" ColumnName="DNC_TRANSACTION_ID" />
+          <ScalarProperty Name="DETAIL" ColumnName="DETAIL" />
+          <ScalarProperty Name="FROM_SYSTEM" ColumnName="FROM_SYSTEM" />
+          <ScalarProperty Name="MODULE" ColumnName="MODULE" />
+          <ScalarProperty Name="IP_ADDRESS" ColumnName="IP_ADDRESS" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_ACTIVITY_PRODUCT">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_ACTIVITY_PRODUCT">
+        <MappingFragment StoreEntitySet="TB_T_DNC_ACTIVITY_PRODUCT">
+          <ScalarProperty Name="DNC_ACTIVITY_PRODUCT_ID" ColumnName="DNC_ACTIVITY_PRODUCT_ID" />
+          <ScalarProperty Name="DNC_ACTIVITY_TYPE_ID" ColumnName="DNC_ACTIVITY_TYPE_ID" />
+          <ScalarProperty Name="PRODUCT_ID" ColumnName="PRODUCT_ID" />
+          <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+          <ScalarProperty Name="DELETE_STATUS" ColumnName="DELETE_STATUS" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="UPDATE_USER" ColumnName="UPDATE_USER" />
+          <ScalarProperty Name="CREATE_USERNAME" ColumnName="CREATE_USERNAME" />
+          <ScalarProperty Name="UPDATE_USERNAME" ColumnName="UPDATE_USERNAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_ACTIVITY_TYPE">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_ACTIVITY_TYPE">
+        <MappingFragment StoreEntitySet="TB_T_DNC_ACTIVITY_TYPE">
+          <ScalarProperty Name="DNC_ACTIVITY_TYPE_ID" ColumnName="DNC_ACTIVITY_TYPE_ID" />
+          <ScalarProperty Name="DNC_TRANSACTION_ID" ColumnName="DNC_TRANSACTION_ID" />
+          <ScalarProperty Name="SALES_BLOCK_TELEPHONE" ColumnName="SALES_BLOCK_TELEPHONE" />
+          <ScalarProperty Name="SALES_BLOCK_SMS" ColumnName="SALES_BLOCK_SMS" />
+          <ScalarProperty Name="SALES_BLOCK_EMAIL" ColumnName="SALES_BLOCK_EMAIL" />
+          <ScalarProperty Name="SALES_BLOCK_ALL_PRODUCT" ColumnName="SALES_BLOCK_ALL_PRODUCT" />
+          <ScalarProperty Name="INFORMATION_BLOCK_TELEPHONE" ColumnName="INFORMATION_BLOCK_TELEPHONE" />
+          <ScalarProperty Name="INFORMATION_BLOCK_SMS" ColumnName="INFORMATION_BLOCK_SMS" />
+          <ScalarProperty Name="INFORMATION_BLOCK_EMAIL" ColumnName="INFORMATION_BLOCK_EMAIL" />
+          <ScalarProperty Name="INFORMATION_BLOCK_ALL_PRODUCT" ColumnName="INFORMATION_BLOCK_ALL_PRODUCT" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="UPDATE_USER" ColumnName="UPDATE_USER" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="CREATE_USERNAME" ColumnName="CREATE_USERNAME" />
+          <ScalarProperty Name="UPDATE_USERNAME" ColumnName="UPDATE_USERNAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_EMAIL">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_EMAIL">
+        <MappingFragment StoreEntitySet="TB_T_DNC_EMAIL">
+          <ScalarProperty Name="DNC_EMAIL_ID" ColumnName="DNC_EMAIL_ID" />
+          <ScalarProperty Name="DNC_TRANSACTION_ID" ColumnName="DNC_TRANSACTION_ID" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="DELETE_STATUS" ColumnName="DELETE_STATUS" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="UPDATE_USER" ColumnName="UPDATE_USER" />
+          <ScalarProperty Name="CREATE_USERNAME" ColumnName="CREATE_USERNAME" />
+          <ScalarProperty Name="UPDATE_USERNAME" ColumnName="UPDATE_USERNAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_EXPORT_FLAG">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_EXPORT_FLAG">
+        <MappingFragment StoreEntitySet="TB_T_DNC_EXPORT_FLAG">
+          <ScalarProperty Name="DNC_EXPORT_FLAG_ID" ColumnName="DNC_EXPORT_FLAG_ID" />
+          <ScalarProperty Name="PHONE_NO" ColumnName="PHONE_NO" />
+          <ScalarProperty Name="STATUS_TO_OTHER" ColumnName="STATUS_TO_OTHER" />
+          <ScalarProperty Name="STATUS_TO_TOT" ColumnName="STATUS_TO_TOT" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_LOAD_LIST">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_LOAD_LIST">
+        <MappingFragment StoreEntitySet="TB_T_DNC_LOAD_LIST">
+          <ScalarProperty Name="DNC_LOAD_LIST_ID" ColumnName="DNC_LOAD_LIST_ID" />
+          <ScalarProperty Name="FILE_NAME" ColumnName="FILE_NAME" />
+          <ScalarProperty Name="CONTENT_TYPE" ColumnName="CONTENT_TYPE" />
+          <ScalarProperty Name="DOCUMENT_NAME" ColumnName="DOCUMENT_NAME" />
+          <ScalarProperty Name="DOCUMENT_DESC" ColumnName="DOCUMENT_DESC" />
+          <ScalarProperty Name="FILE_URL" ColumnName="FILE_URL" />
+          <ScalarProperty Name="UPLOAD_DATE" ColumnName="UPLOAD_DATE" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="UPDATE_USER" ColumnName="UPDATE_USER" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_LOAD_LIST_DATA">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_LOAD_LIST_DATA">
+        <MappingFragment StoreEntitySet="TB_T_DNC_LOAD_LIST_DATA">
+          <ScalarProperty Name="DNC_LOAD_LIST_DATA_ID" ColumnName="DNC_LOAD_LIST_DATA_ID" />
+          <ScalarProperty Name="DNC_LOAD_LIST_ID" ColumnName="DNC_LOAD_LIST_ID" />
+          <ScalarProperty Name="ROW_NO" ColumnName="ROW_NO" />
+          <ScalarProperty Name="SUBSCRIPT_TYPE_ID" ColumnName="SUBSCRIPT_TYPE_ID" />
+          <ScalarProperty Name="CARD_NO" ColumnName="CARD_NO" />
+          <ScalarProperty Name="FIRST_NAME" ColumnName="FIRST_NAME" />
+          <ScalarProperty Name="LAST_NAME" ColumnName="LAST_NAME" />
+          <ScalarProperty Name="EXPIRY_DATE" ColumnName="EXPIRY_DATE" />
+          <ScalarProperty Name="KKCIS_ID" ColumnName="KKCIS_ID" />
+          <ScalarProperty Name="PHONE_NO" ColumnName="PHONE_NO" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="SALES_BLOCK_TELEPHONE" ColumnName="SALES_BLOCK_TELEPHONE" />
+          <ScalarProperty Name="SALES_BLOCK_SMS" ColumnName="SALES_BLOCK_SMS" />
+          <ScalarProperty Name="SALES_BLOCK_EMAIL" ColumnName="SALES_BLOCK_EMAIL" />
+          <ScalarProperty Name="SALES_BLOCK_ALL_PRODUCT" ColumnName="SALES_BLOCK_ALL_PRODUCT" />
+          <ScalarProperty Name="INFORMATION_BLOCK_TELEPHONE" ColumnName="INFORMATION_BLOCK_TELEPHONE" />
+          <ScalarProperty Name="INFORMATION_BLOCK_SMS" ColumnName="INFORMATION_BLOCK_SMS" />
+          <ScalarProperty Name="INFORMATION_BLOCK_EMAIL" ColumnName="INFORMATION_BLOCK_EMAIL" />
+          <ScalarProperty Name="INFORMATION_BLOCK_ALL_PRODUCT" ColumnName="INFORMATION_BLOCK_ALL_PRODUCT" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="TRANS_TYPE" ColumnName="TRANS_TYPE" />
+          <ScalarProperty Name="DNC_TRANSACTION_ID" ColumnName="DNC_TRANSACTION_ID" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="UPDATE_USER" ColumnName="UPDATE_USER" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_PHONE_NO">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_PHONE_NO">
+        <MappingFragment StoreEntitySet="TB_T_DNC_PHONE_NO">
+          <ScalarProperty Name="DNC_PHONE_NO_ID" ColumnName="DNC_PHONE_NO_ID" />
+          <ScalarProperty Name="DNC_TRANSACTION_ID" ColumnName="DNC_TRANSACTION_ID" />
+          <ScalarProperty Name="PHONE_NO" ColumnName="PHONE_NO" />
+          <ScalarProperty Name="DELETE_STATUS" ColumnName="DELETE_STATUS" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="UPDATE_USER" ColumnName="UPDATE_USER" />
+          <ScalarProperty Name="CREATE_USERNAME" ColumnName="CREATE_USERNAME" />
+          <ScalarProperty Name="UPDATE_USERNAME" ColumnName="UPDATE_USERNAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_TRANSACTION">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_TRANSACTION">
+        <MappingFragment StoreEntitySet="TB_T_DNC_TRANSACTION">
+          <ScalarProperty Name="DNC_TRANSACTION_ID" ColumnName="DNC_TRANSACTION_ID" />
+          <ScalarProperty Name="SUBSCRIPT_TYPE_ID" ColumnName="SUBSCRIPT_TYPE_ID" />
+          <ScalarProperty Name="CARD_NO" ColumnName="CARD_NO" />
+          <ScalarProperty Name="FIRST_NAME" ColumnName="FIRST_NAME" />
+          <ScalarProperty Name="LAST_NAME" ColumnName="LAST_NAME" />
+          <ScalarProperty Name="EFFECTIVE_DATE" ColumnName="EFFECTIVE_DATE" />
+          <ScalarProperty Name="EXPIRY_DATE" ColumnName="EXPIRY_DATE" />
+          <ScalarProperty Name="FROM_SYSTEM" ColumnName="FROM_SYSTEM" />
+          <ScalarProperty Name="KKCIS_ID" ColumnName="KKCIS_ID" />
+          <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="TRANS_TYPE" ColumnName="TRANS_TYPE" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="UPDATE_DATE" ColumnName="UPDATE_DATE" />
+          <ScalarProperty Name="UPDATE_USER" ColumnName="UPDATE_USER" />
+          <ScalarProperty Name="CREATE_USERNAME" ColumnName="CREATE_USERNAME" />
+          <ScalarProperty Name="UPDATE_USERNAME" ColumnName="UPDATE_USERNAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_TRANSACTION_HIS">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_TRANSACTION_HIS">
+        <MappingFragment StoreEntitySet="TB_T_DNC_TRANSACTION_HIS">
+          <ScalarProperty Name="DNC_TRANSACTION_HIS_ID" ColumnName="DNC_TRANSACTION_HIS_ID" />
+          <ScalarProperty Name="DNC_TRANSACTION_ID" ColumnName="DNC_TRANSACTION_ID" />
+          <ScalarProperty Name="SUBSCRIPT_TYPE_ID" ColumnName="SUBSCRIPT_TYPE_ID" />
+          <ScalarProperty Name="CARD_NO" ColumnName="CARD_NO" />
+          <ScalarProperty Name="FIRST_NAME" ColumnName="FIRST_NAME" />
+          <ScalarProperty Name="LAST_NAME" ColumnName="LAST_NAME" />
+          <ScalarProperty Name="EFFECTIVE_DATE" ColumnName="EFFECTIVE_DATE" />
+          <ScalarProperty Name="EXPIRY_DATE" ColumnName="EXPIRY_DATE" />
+          <ScalarProperty Name="FROM_SYSTEM" ColumnName="FROM_SYSTEM" />
+          <ScalarProperty Name="KKCIS_ID" ColumnName="KKCIS_ID" />
+          <ScalarProperty Name="REMARK" ColumnName="REMARK" />
+          <ScalarProperty Name="STATUS" ColumnName="STATUS" />
+          <ScalarProperty Name="TRANS_TYPE" ColumnName="TRANS_TYPE" />
+          <ScalarProperty Name="SALES_BLOCK_TELEPHONE" ColumnName="SALES_BLOCK_TELEPHONE" />
+          <ScalarProperty Name="SALES_BLOCK_SMS" ColumnName="SALES_BLOCK_SMS" />
+          <ScalarProperty Name="SALES_BLOCK_EMAIL" ColumnName="SALES_BLOCK_EMAIL" />
+          <ScalarProperty Name="SALES_BLOCK_ALL_PRODUCT" ColumnName="SALES_BLOCK_ALL_PRODUCT" />
+          <ScalarProperty Name="INFORMATION_BLOCK_TELEPHONE" ColumnName="INFORMATION_BLOCK_TELEPHONE" />
+          <ScalarProperty Name="INFORMATION_BLOCK_SMS" ColumnName="INFORMATION_BLOCK_SMS" />
+          <ScalarProperty Name="INFORMATION_BLOCK_EMAIL" ColumnName="INFORMATION_BLOCK_EMAIL" />
+          <ScalarProperty Name="INFORMATION_BLOCK_ALL_PRODUCT" ColumnName="INFORMATION_BLOCK_ALL_PRODUCT" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USERNAME" ColumnName="CREATE_USERNAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_TRANSACTION_HIS_EMAIL">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_TRANSACTION_HIS_EMAIL">
+        <MappingFragment StoreEntitySet="TB_T_DNC_TRANSACTION_HIS_EMAIL">
+          <ScalarProperty Name="DNC_TRANSACTION_HIS_EMAIL_ID" ColumnName="DNC_TRANSACTION_HIS_EMAIL_ID" />
+          <ScalarProperty Name="DNC_TRANSACTION_HIS_ID" ColumnName="DNC_TRANSACTION_HIS_ID" />
+          <ScalarProperty Name="EMAIL" ColumnName="EMAIL" />
+          <ScalarProperty Name="DELETE_STATUS" ColumnName="DELETE_STATUS" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="CREATE_USERNAME" ColumnName="CREATE_USERNAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_TRANSACTION_HIS_PHONE">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_TRANSACTION_HIS_PHONE">
+        <MappingFragment StoreEntitySet="TB_T_DNC_TRANSACTION_HIS_PHONE">
+          <ScalarProperty Name="DNC_TRANSACTION_HIS_PHONE_ID" ColumnName="DNC_TRANSACTION_HIS_PHONE_ID" />
+          <ScalarProperty Name="DNC_TRANSACTION_HIS_ID" ColumnName="DNC_TRANSACTION_HIS_ID" />
+          <ScalarProperty Name="PHONE_NO" ColumnName="PHONE_NO" />
+          <ScalarProperty Name="DELETE_STATUS" ColumnName="DELETE_STATUS" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="CREATE_USERNAME" ColumnName="CREATE_USERNAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TB_T_DNC_TRANSACTION_HIS_PRODUCT">
+      <EntityTypeMapping TypeName="DNCDBModel.TB_T_DNC_TRANSACTION_HIS_PRODUCT">
+        <MappingFragment StoreEntitySet="TB_T_DNC_TRANSACTION_HIS_PRODUCT">
+          <ScalarProperty Name="DNC_TRANSACTION_HIS_PRODUCT_ID" ColumnName="DNC_TRANSACTION_HIS_PRODUCT_ID" />
+          <ScalarProperty Name="DNC_TRANSACTION_HIS_ID" ColumnName="DNC_TRANSACTION_HIS_ID" />
+          <ScalarProperty Name="PRODUCT_ID" ColumnName="PRODUCT_ID" />
+          <ScalarProperty Name="TYPE" ColumnName="TYPE" />
+          <ScalarProperty Name="DELETE_STATUS" ColumnName="DELETE_STATUS" />
+          <ScalarProperty Name="CREATE_DATE" ColumnName="CREATE_DATE" />
+          <ScalarProperty Name="CREATE_USER" ColumnName="CREATE_USER" />
+          <ScalarProperty Name="CREATE_USERNAME" ColumnName="CREATE_USERNAME" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

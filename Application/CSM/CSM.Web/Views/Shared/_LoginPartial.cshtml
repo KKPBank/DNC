@@ -1,0 +1,19 @@
+﻿@using CSM.Web.Models
+@{
+    //var userInfo = Session["user_info"] != null ? (Session["user_info"] as CSM.Entity.UserEntity) : null;
+    UserIdentity id = (UserIdentity)HttpContext.Current.User.Identity;
+    var userInfo = id.UserInfo;
+}
+
+@if (userInfo != null)
+{
+    <input type="hidden" value="@userInfo.FullName" id="hidCurrentUserFullName" />
+    <input type="hidden" value="@userInfo.UserId" id="hidCurrentUserId" />
+
+    <div class="system-info">
+        User: @userInfo.FullName
+    </div>
+    <div class="system-info">
+        สาขา: @userInfo.BranchName
+    </div>
+}

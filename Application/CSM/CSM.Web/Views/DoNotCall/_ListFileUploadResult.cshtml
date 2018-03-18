@@ -1,0 +1,62 @@
+﻿@model CSM.Entity.DoNotCallFileUploadResultModel
+@using CSM.Common.Resources
+@using CSM.Common.Utilities
+
+@{
+    bool hasRowErrors = Model.ErrorResults.Count > 0;
+}
+
+<div class="row">
+    <div class="col-sm-6 col-md-4">
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th colspan="2" class="text-nowrap">ผลการตรวจสอบข้อมูล</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><label>File Name</label></td>
+                        <td>@Model.FileName</td>
+                    </tr>
+                    <tr>
+                        <td><label>Total</label></td>
+                        <td>@Model.DataRowCount</td>
+                    </tr>
+                    <tr>
+                        <td><label>Data Invalid</label></td>
+                        <td>@Model.ErrorDisplay</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<br />
+
+@{
+    if (hasRowErrors)
+    {
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap">Row No.</th>
+                        <th class="text-nowrap">Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.ErrorResults)
+                    {
+                        <tr>
+                            <td class="center">@item.RowNum</td>
+                            <td>@item.DescriptionDisplay</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}

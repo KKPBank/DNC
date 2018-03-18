@@ -1,0 +1,131 @@
+﻿@model CSM.Entity.DoNotCallByCustomerEntity
+@using CSM.Common.Resources
+
+<div>
+    <div id="div_form" class="form-box">
+        @Html.HiddenFor(m => m.BasicInfo.TransactionId, new { id = "hidTransactionId" })
+        <label class="font-red">@Resource.Lbl_WarningDoNotCallListDisclosure</label>
+        <!--Card ID section-->
+        <div class="section_panel">
+            <strong class="font-blue">@Resource.Lbl_BlockLevelCustomer</strong>
+            <div class="row margin-top-15">
+                <div class="col-xs-12">
+                    <div class="row form-group">
+                        <div class="col-sm-5">
+                            <label class="col-md-4 col-lg-3 control-label form-label">
+                                @Html.DisplayNameFor(m => m.CardInfo.CardNo):
+                            </label>
+                            <div class="col-md-8 col-lg-9 nopadding">
+                                @Html.TextBoxFor(m => m.CardInfo.CardNo, new { disabled = true, @class = "form-control input-sm" })
+                                @Html.HiddenFor(m => m.CardInfo.CardNo, new { id = "hidCardNo" })
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="col-md-4 col-lg-3 control-label form-label">
+                                @Html.DisplayNameFor(m => m.CardInfo.SubscriptionTypeId):
+                                <span id="reqSubscriptionType" class="required-field-block">*</span>
+                            </label>
+                            <div class="col-md-8 col-lg-9 nopadding">
+                                @Html.DropDownListFor(model => model.CardInfo.SubscriptionTypeId, new List<SelectListItem>(ViewBag.SubscriptionTypeList), Resource.Ddl_PleaseSelect, new { @class = "form-control input-sm", @id = "ddlSubscriptionType" })
+                                @Html.Hidden("SubscriptionTypeId")
+                                @Html.ValidationMessage("SubscriptionTypeId")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+        <div id="dvSearchResult">
+            @{
+                Html.RenderPartial("~/Views/DoNotCall/Shared/_NameSection.cshtml", Model.BasicInfo);
+                <div>
+                    @Html.HiddenFor(m => m.HasBlockItems)
+                    <label class="font-red">
+                        @Html.ValidationMessageFor(m => m.HasBlockItems)
+                    </label>
+                </div>
+                Html.RenderPartial("~/Views/DoNotCall/Shared/_BlockSalesSection.cshtml", Model.BlockSales);
+                Html.RenderPartial("~/Views/DoNotCall/Shared/_BlockInformationSection.cshtml", Model.BlockInformation);
+                Html.RenderPartial("~/Views/DoNotCall/Shared/_TelephoneSection.cshtml", Model.ContactDetail.Telephone);
+                Html.RenderPartial("~/Views/DoNotCall/Shared/_EmailSection.cshtml", Model.ContactDetail.Email);
+                Html.RenderPartial("~/Views/DoNotCall/Shared/_BasicInfoSection.cshtml", Model.BasicInfo);
+            }
+            @{
+                if (Model.BasicInfo.TransactionId > 0)
+                {
+                    Html.RenderPartial("~/Views/DoNotCall/Shared/_HistoryDoNotCall.cshtml");
+                }
+            }
+        </div>
+        <div class="clear"></div>
+        <!--Submit Buttons section-->
+        @{Html.RenderPartial("~/Views/DoNotCall/Shared/_SubmitButtonsSection.cshtml"); }
+    </div>
+</div>
+
+@Scripts.Render("~/Scripts/DoNotCallBlock.js")
+<script>
+    var emailList = [];
+    var phoneList = [];
+    var url_SaveCustomer = '@Url.Action("SaveCustomer", "DoNotCall")';
+    var url_SearchDoNotCall = '@Url.Action("Search", "DoNotCall")';
+    var url_AutoCompleteSearchProductWithExceptions = "@Url.Action("AutoCompleteSearchProductWithExceptions", "AutoComplete")";
+    var autoCompletePlaceHolder = '@Resource.Ddl_AutoComplete';
+    var autoCompleteMinLength = '@CSM.Common.Utilities.Constants.MinLenght.AutoComplete';
+
+    function onCancel() {
+        window.location = url_SearchDoNotCall;
+    }
+
+    function onSave() {
+        clearServerErrors();
+        callAjaxJsonAntiForgery(url_SaveCustomer, "post", getCustomerData(), onSaveSuccess);
+    }
+
+    function getCustomerData() {
+        var isNeverExpire = $jq("#chkNeverExpire").prop("checked");
+        var expireDate = isNeverExpire ? new Date(@ViewBag.NeverExpireYear, @ViewBag.NeverExpireMonth - 1, @ViewBag.NeverExpireDay)  : $jq("#dvExpireDate").datepicker('getDate');
+        return {
+            CardInfo: {
+                CardNo: $jq("#hidCardNo").val(),
+                SubscriptionTypeId: $jq("#ddlSubscriptionType").val(),
+            },
+            BasicInfo: {
+                TransactionId: $jq("#hidTransactionId").val(),
+                FirstName: $jq("#txtFirstName").val(),
+                LastName: $jq("#txtLastName").val(),
+                EffectiveDate: $jq("#dvEffectiveDate").datepicker('getDate'),
+                ExpireDate: expireDate.toISOString(),
+                CreateDate: $jq("#hidCreateDate").val(),
+                UpdateDate: $jq("#hidUpdateDate").val(),
+                Remark: $jq("#txtRemark").val(),
+                IsNeverExpire: isNeverExpire
+            },
+            BlockInformation: {
+                IsBlockInfoEmail: $jq("#chkIsBlockInformationEmail").prop("checked"),
+                IsBlockInfoTelephone: $jq("#chkIsBlockInformationTelephone").prop("checked"),
+                IsBlockInfoSms: $jq("#chkIsBlockInformationSms").prop("checked"),
+                IsBlockAllInfoProducts: $jq("#chkIsBlockAllInformationProducts").prop("checked"),
+                BlockInfoProductList: blockInformationProductList,
+
+            },
+            BlockSales: {
+                IsBlockSalesEmail: $jq("#chkIsBlockSalesEmail").prop("checked"),
+                IsBlockSalesTelephone: $jq("#chkIsBlockSalesTelephone").prop("checked"),
+                IsBlockSalesSms: $jq("#chkIsBlockSalesSms").prop("checked"),
+                IsBlockAllSalesProducts: $jq("#chkIsBlockAllSalesProducts").prop("checked"),
+                BlockSalesProductList: blockSalesProductList
+            },
+            ContactDetail: {
+                Email: {
+                    EmailList: emailList,
+                },
+                Telephone: {
+                    TelephoneList: phoneList
+                }
+            }
+        };
+    }
+
+</script>

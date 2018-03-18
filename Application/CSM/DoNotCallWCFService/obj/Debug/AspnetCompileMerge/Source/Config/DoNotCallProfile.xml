@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<services>
+  <service name="ExportFile">
+    <service_name>ExportFile</service_name>
+    <username>CSM</username>
+    <password>CSM</password>
+    <reference_no></reference_no>
+    <system_code>CSM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+  <service name="ExportFileToTOT">
+    <service_name>ExportFileToTOT</service_name>
+    <username>CSM</username>
+    <password>CSM</password>
+    <reference_no></reference_no>
+    <system_code>CSM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+  <service name="InquiryDoNotCallList">
+    <service_name>InquiryDoNotCallList</service_name>
+    <username>SLM</username>
+    <password>password</password>
+    <reference_no></reference_no>
+    <system_code>SLM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+  <service name="InquiryDoNotCallList">
+    <service_name>InquiryDoNotCallList</service_name>
+    <username>OBT</username>
+    <password>password</password>
+    <reference_no></reference_no>
+    <system_code>OBT</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+  <service name="InquiryDoNotCallList">
+    <service_name>InquiryDoNotCallList</service_name>
+    <username>CSM</username>
+    <password>password</password>
+    <reference_no></reference_no>
+    <system_code>CSM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+  <service name="InsertOrUpdateDoNotCallPhone">
+    <service_name>InsertOrUpdateDoNotCallPhone</service_name>
+    <username>CSM</username>
+    <password>CSM</password>
+    <reference_no></reference_no>
+    <system_code>CSM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+  <service name="InsertOrUpdateDoNotCallCustomer">
+    <service_name>InsertOrUpdateDoNotCallCustomer</service_name>
+    <username>CSM</username>
+    <password>CSM</password>
+    <reference_no></reference_no>
+    <system_code>CSM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+</services>

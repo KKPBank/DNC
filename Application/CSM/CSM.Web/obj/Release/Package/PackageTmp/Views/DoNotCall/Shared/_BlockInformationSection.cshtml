@@ -1,0 +1,154 @@
+﻿@model CSM.Entity.DoNotCallBlockInformationModel
+@using CSM.Common.Resources
+@using CSM.Common.Utilities
+
+<style>
+    #divInformationProductTable {
+        max-height: 100px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+</style>
+
+<div class="section_panel">
+    <strong class="font-blue">@Resource.Lbl_InformationEngWithThaiTranslation</strong>
+    <div class="row margin-top-15">
+        <div class="row form-group">
+            <label class="col-sm-3">@Html.CheckBoxFor(m => m.IsBlockInfoTelephone, new { id = "chkIsBlockInformationTelephone" }) @Html.DisplayNameFor(m => m.IsBlockInfoTelephone)</label>
+            <label class="col-sm-3">@Html.CheckBoxFor(m => m.IsBlockInfoSms, new { id = "chkIsBlockInformationSms" }) @Html.DisplayNameFor(m => m.IsBlockInfoSms)</label>
+            <label class="col-sm-3">@Html.CheckBoxFor(m => m.IsBlockInfoEmail, new { id = "chkIsBlockInformationEmail" }) @Html.DisplayNameFor(m => m.IsBlockInfoEmail)</label>
+        </div>
+        <div class="row form-group">
+            <label class="col-sm-3 col-md-2">@Html.CheckBoxFor(m => m.IsBlockAllInfoProducts, new { id = "chkIsBlockAllInformationProducts" }) @Html.DisplayNameFor(m => m.IsBlockAllInfoProducts)</label>
+            <div class="col-sm-4 col-md-3 nopadding">
+                <input type="text" id="txtInformationProduct" maxlength="100" class="form-control input-sm input-medium" />
+            </div>
+            <div class="col-sm-3 col-md-2 nopadding">
+                <button id="btnAddInformationProduct" type="button" class="btn btn-green btn-sm" onclick="onAddNewInformationProduct()">Add Product</button>
+            </div>
+        </div>
+        <div class="padding-left-15">
+            @Html.HiddenFor(m => m.BlockInfoProductList)
+            @Html.ValidationMessageFor(m => m.BlockInfoProductList)
+        </div>
+        <div class="row form-group">
+            <div id="divInformationProductTable" class="table-responsive">
+                <table id="tblBlockInformationProduct" class="table datatable">
+                    <thead>
+                        <tr>
+                            <th class="center text-nowrap" width="80">Action</th>
+                            <th class="center text-nowrap">Product</th>
+                            <th class="center text-nowrap" width="110">Status</th>
+                            <th class="center text-nowrap">Update By</th>
+                            <th class="center text-nowrap" width="170">Update Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            foreach (var item in Model.BlockInfoProductList)
+                            {
+                                <tr class="existingData">
+                                    <td class='center'>
+                                        @if (!item.IsDeleted)
+                                        {
+                                            <a href='javascript:;' class='delete-active' title='delete' onClick='onClickDeleteInfoProduct(this, @item.Id, @item.ActivityProductId)'></a>
+                                        }
+                                    </td>
+                                    <td>@item.Name</td>
+                                    <td class="center">@item.Status</td>
+                                    <td>@item.UpdateBy.DisplayName</td>
+                                    <td class='center'>@item.DisplayUpdateDate</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var info = {};
+    var blockInformationProductList = [];
+
+    $jq(function () {
+        initAutoCompleteProduct($jq("#txtInformationProduct"), getInfoExistingProductIdList);
+        $jq("#chkIsBlockAllInformationProducts").on("click", onClickBlockAllInfoProducts);
+        toggleInformationProductInput();
+        @foreach (var item in Model.BlockInfoProductList)
+        {
+            @:blockInformationProductList.push({ Id: @item.Id, CreateDate: '@item.CreateDate', UpdateDate: '@item.UpdateDate', ActivityProductId: @item.ActivityProductId, IsDeleted: @Json.Encode(item.IsDeleted), Name: '@item.Name' });
+        }
+    });
+
+    function onClickBlockAllInfoProducts() {
+        var checkBox = $jq("#chkIsBlockAllInformationProducts");
+        if (checkBox.prop("checked") && hasActiveProducts(blockInformationProductList)) {
+            if (confirm('ต้องการลบข้อมูล product ทั้งหมดหรือไม่')) {
+                toggleInformationProductInput();
+            } else {
+                checkBox.prop("checked", false);
+            }
+        } else {
+            toggleInformationProductInput();
+        }
+    }
+
+    function getInfoExistingProductIdList(keyword) {
+        var result = [];
+        $jq.each(blockInformationProductList, function () {
+            if (!this.IsDeleted) {
+                result.push(this.Id);
+            }
+        });
+
+        return result;
+    }
+
+    function onClickDeleteInfoProduct(element, productId, activityProductId) {
+        onDeleteProduct(element, productId, activityProductId, blockInformationProductList);
+    }
+
+    function toggleInformationProductInput() {
+        var ddlProduct = $jq("#txtInformationProduct");
+        var btnAddProduct = $jq("#btnAddInformationProduct");
+        var tblBlockProducts = $jq("#tblBlockInformationProduct");
+        var isBlockAll = $jq("#chkIsBlockAllInformationProducts").prop("checked");
+        var productName = $jq("#s2id_txtInformationProduct .select2-chosen");
+
+        btnAddProduct.prop("disabled", isBlockAll);
+
+        if (isBlockAll) {
+            deleteAllGridProducts("tblBlockInformationProduct", blockInformationProductList);
+            tblBlockProducts.hide();
+            ddlProduct.select2("disable");
+            ddlProduct.select2("val", "");
+            productName.text("Block All Products");
+        } else {
+            ddlProduct.select2("enable");
+            productName.text(info.autoCompletePlaceHolder);
+            tblBlockProducts.show();
+        }
+    }
+
+    function onAddNewInformationProduct() {
+        // Check autocomplete value
+        var selectedProductId = $jq("#txtInformationProduct").val();
+        if (selectedProductId != "") {
+            // Check if the item is already on the list
+            if (!isExistingProduct(selectedProductId, blockInformationProductList)) {
+                // Add to list
+                var productName = $jq("#s2id_txtInformationProduct .select2-chosen").text();
+                var now = new Date();
+                blockInformationProductList.push(createNewProductModel(selectedProductId, productName, now));
+                // Add row to table
+                var html = generateNewProductRow(selectedProductId, productName, now, "onClickDeleteInfoProduct");
+                $jq("#tblBlockInformationProduct tbody").prepend(html);
+            }
+        } else {
+            doModal('dvAlertMsg', 'Message Dialog', 'กรุณาเลือก Product', '', '');
+        }
+    }
+
+</script>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ReferenceGroup xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" ID="7a6b3197-384b-4229-b921-5bac7d4ee7b7" xmlns="urn:schemas-microsoft-com:xml-wcfservicemap">
+  <ClientOptions>
+    <GenerateAsynchronousMethods>false</GenerateAsynchronousMethods>
+    <GenerateTaskBasedAsynchronousMethod>true</GenerateTaskBasedAsynchronousMethod>
+    <EnableDataBinding>true</EnableDataBinding>
+    <ExcludedTypes />
+    <ImportXmlTypes>false</ImportXmlTypes>
+    <GenerateInternalTypes>false</GenerateInternalTypes>
+    <GenerateMessageContracts>false</GenerateMessageContracts>
+    <NamespaceMappings />
+    <CollectionMappings />
+    <GenerateSerializableTypes>true</GenerateSerializableTypes>
+    <Serializer>Auto</Serializer>
+    <UseSerializerForFaults>true</UseSerializerForFaults>
+    <ReferenceAllAssemblies>true</ReferenceAllAssemblies>
+    <ReferencedAssemblies />
+    <ReferencedDataContractTypes />
+    <ServiceContractMappings />
+  </ClientOptions>
+  <MetadataSources>
+    <MetadataSource Address="http://10.202.104.51/DoNotCallService/DoNotCallBatchProcess.svc?Wsdl" Protocol="http" SourceId="1" />
+  </MetadataSources>
+  <Metadata>
+    <MetadataFile FileName="DoNotCallBatchProcess.wsdl" MetadataType="Wsdl" ID="762d5c6c-b263-4a1c-8e59-7a17a92d409d" SourceId="1" SourceUrl="http://10.202.104.51/DoNotCallService/DoNotCallBatchProcess.svc?wsdl=wsdl0" />
+    <MetadataFile FileName="DoNotCallBatchProcess1.wsdl" MetadataType="Wsdl" ID="601a6fe0-e966-46e2-bf2c-8f48f321881d" SourceId="1" SourceUrl="http://10.202.104.51/DoNotCallService/DoNotCallBatchProcess.svc?Wsdl" />
+    <MetadataFile FileName="DoNotCallBatchProcess.xsd" MetadataType="Schema" ID="435f1ced-8790-47dc-bd9c-85885e9583fc" SourceId="1" SourceUrl="http://10.202.104.51/DoNotCallService/DoNotCallBatchProcess.svc?xsd=xsd2" />
+    <MetadataFile FileName="DoNotCallBatchProcess1.xsd" MetadataType="Schema" ID="37eeb9f2-08a6-4286-a967-39776a16c609" SourceId="1" SourceUrl="http://10.202.104.51/DoNotCallService/DoNotCallBatchProcess.svc?xsd=xsd0" />
+    <MetadataFile FileName="DoNotCallBatchProcess2.xsd" MetadataType="Schema" ID="591a2cf9-d189-4e84-bafc-2da604ee0e54" SourceId="1" SourceUrl="http://10.202.104.51/DoNotCallService/DoNotCallBatchProcess.svc?xsd=xsd3" />
+    <MetadataFile FileName="DoNotCallBatchProcess3.xsd" MetadataType="Schema" ID="266b8efa-9104-4f06-9665-e5b4732cdb19" SourceId="1" SourceUrl="http://10.202.104.51/DoNotCallService/DoNotCallBatchProcess.svc?xsd=xsd1" />
+  </Metadata>
+  <Extensions>
+    <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />
+    <ExtensionFile FileName="configuration.svcinfo" Name="configuration.svcinfo" />
+  </Extensions>
+</ReferenceGroup>

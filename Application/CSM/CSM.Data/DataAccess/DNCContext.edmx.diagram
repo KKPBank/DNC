@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="792c9b2f2bc6454d8cd7307b3f47e59f" Name="Diagram1">
+        <EntityTypeShape EntityType="DNCDBModel.TB_C_DNC_TIME_PERIOD" Width="1.5" PointX="7.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_L_DNC_ACTION_LOG" Width="1.5" PointX="9.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_ACTIVITY_PRODUCT" Width="1.5" PointX="5.25" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_ACTIVITY_TYPE" Width="1.5" PointX="3" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_EMAIL" Width="1.5" PointX="3" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_EXPORT_FLAG" Width="1.5" PointX="10.75" PointY="4.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_LOAD_LIST" Width="1.5" PointX="5.75" PointY="8.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_LOAD_LIST_DATA" Width="1.5" PointX="8" PointY="7.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_PHONE_NO" Width="1.5" PointX="3" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_TRANSACTION" Width="1.5" PointX="0.75" PointY="10.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_TRANSACTION_HIS" Width="1.5" PointX="3" PointY="16.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_TRANSACTION_HIS_EMAIL" Width="1.5" PointX="5.25" PointY="15" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_TRANSACTION_HIS_PHONE" Width="1.5" PointX="5.25" PointY="18.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="DNCDBModel.TB_T_DNC_TRANSACTION_HIS_PRODUCT" Width="1.5" PointX="5.25" PointY="21.5" IsExpanded="true" />
+        <AssociationConnector Association="DNCDBModel.FK_TB_T_DNC_ACTIVITY_PRODUCT_TB_T_DNC_ACTIVITY_TYPE" ManuallyRouted="false" />
+        <AssociationConnector Association="DNCDBModel.FK_TB_T_DNC_ACTIVITY_TYPE_TB_T_DNC_CUSTOMER" ManuallyRouted="false" />
+        <AssociationConnector Association="DNCDBModel.FK_TB_T_DNC_EMAIL_TB_T_DNC_CUSTOMER" ManuallyRouted="false" />
+        <AssociationConnector Association="DNCDBModel.FK_TB_T_DNC_LOAD_LIST_TELEPHONE_TB_T_DNC_LOAD_LIST" ManuallyRouted="false" />
+        <AssociationConnector Association="DNCDBModel.FK_TB_T_DNC_PHONE_NO_TB_T_DNC_CUSTOMER" ManuallyRouted="false" />
+        <AssociationConnector Association="DNCDBModel.FK_TB_T_DNC_TRANSACTION_HIS_TB_T_DNC_TRANSACTION" ManuallyRouted="false" />
+        <AssociationConnector Association="DNCDBModel.FK_TB_T_DNC_TRANSACTION_HIS_EMAIL_TB_T_DNC_TRANSACTION_HIS" ManuallyRouted="false" />
+        <AssociationConnector Association="DNCDBModel.FK_TB_T_DNC_TRANSACTION_HIS_PHONE_NO_TB_T_DNC_TRANSACTION_HIS" ManuallyRouted="false" />
+        <AssociationConnector Association="DNCDBModel.FK_TB_T_DNC_TRANSACTION_HIS_PRODUCT_TB_T_DNC_TRANSACTION_HIS" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:tns="http://schemas.datacontract.org/2004/07/BatchSelectService.Message" elementFormDefault="qualified" targetNamespace="http://schemas.datacontract.org/2004/07/BatchSelectService.Message" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:import schemaLocation="http://10.202.104.51/BatchSelectService/DoNotCallBatchSelectService.svc?xsd=xsd3" namespace="http://schemas.datacontract.org/2004/07/MTM.MasterService.Shared" />
+  <xs:import schemaLocation="http://10.202.104.51/BatchSelectService/DoNotCallBatchSelectService.svc?xsd=xsd4" namespace="http://schemas.datacontract.org/2004/07/BatchSelectService.Message.SMG" />
+  <xs:complexType name="DoNotCallBatchSelectServiceResponse">
+    <xs:complexContent mixed="false">
+      <xs:extension base="tns:BaseStatusResponse">
+        <xs:sequence>
+          <xs:element xmlns:q1="http://schemas.datacontract.org/2004/07/MTM.MasterService.Shared" minOccurs="0" name="SLMStatus" nillable="true" type="q1:ResponseStatus" />
+          <xs:element xmlns:q2="http://schemas.datacontract.org/2004/07/BatchSelectService.Message.SMG" minOccurs="0" name="SMGStatus" nillable="true" type="q2:SMGResponseStatus" />
+        </xs:sequence>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="DoNotCallBatchSelectServiceResponse" nillable="true" type="tns:DoNotCallBatchSelectServiceResponse" />
+  <xs:complexType name="BaseStatusResponse">
+    <xs:sequence>
+      <xs:element minOccurs="0" name="ResponseCode" nillable="true" type="xs:string" />
+      <xs:element minOccurs="0" name="ResponseMessage" nillable="true" type="xs:string" />
+    </xs:sequence>
+  </xs:complexType>
+  <xs:element name="BaseStatusResponse" nillable="true" type="tns:BaseStatusResponse" />
+</xs:schema>

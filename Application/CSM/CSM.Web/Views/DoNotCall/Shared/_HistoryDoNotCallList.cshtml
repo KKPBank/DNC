@@ -1,0 +1,89 @@
+﻿@model CSM.Web.Models.DoNotCallHistoryLogViewModel
+@using CSM.Common.Resources
+@{
+    /**/
+
+    bool hasData = Model.LogList.Count > 0;
+}
+<style>
+    #dvHistoryLogTable {
+        max-height: 290px;
+        overflow-y: auto;
+        overflow-x: auto;
+    }
+</style>
+
+@{
+    if (hasData)
+    {
+        <div class="form-inline nopadding">
+            @{ Html.RenderPartial("~/Views/Shared/_TablePaging.cshtml", Model.Pager); }
+        </div>
+        <div id="dvHistoryLogTable" class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap" style="width:70px;">Action</th>
+                        <th class="center text-nowrap">วันที่เก็บประวัติ</th>
+                        <th class="center text-nowrap">เวอร์ชัน</th>
+                        <th class="text-nowrap">ผู้บันทึก</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.LogList)
+                    {
+                        <tr>
+                            <td class="center text-nowrap">
+                                <a href="javascript:;" class="view" title="view" onclick="showLogDetail('@item.LogId', '@item.VersionNo');"></a>
+                            </td>
+                            <td class="center">@item.TransactionDateTimeString</td>
+                            <td class="center">@item.VersionNo</td>
+                            <td class="center">@item.EditByName</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <script>
+
+            $jq(function () {
+                pager = {
+                    PageNo: @Model.Pager.PageNo,
+                    PageSize: @Model.Pager.PageSize
+                };
+
+                lastPager = pager;
+                initializeTablePaging(pager, lastPager, reloadHistoryLogList);
+            });
+
+            function showLogDetail(logId, versionNo) {
+                var url = $jq('#historyLogDetailModal').data('url');
+                var params = [
+                    { Name: "logId", Value: logId },
+                    { Name: "versionNo", Value: versionNo },
+                ];
+                openWindowWithParams(url, true, params);
+            }
+        </script>
+    }
+    else
+    {
+        <div class="table-responsive">
+            <table class="table datatable">
+                <thead>
+                    <tr>
+                        <th class="center text-nowrap" style="width:70px;">Action</th>
+                        <th class="center text-nowrap">วันที่เก็บประวัติ</th>
+                        <th class="center text-nowrap">เวอร์ชัน</th>
+                        <th class="text-nowrap">ผู้บันทึก</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="4" class="center">@Resource.Msg_NoRecords</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    }
+}

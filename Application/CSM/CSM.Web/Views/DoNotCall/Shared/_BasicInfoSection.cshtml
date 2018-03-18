@@ -1,0 +1,208 @@
+﻿@model CSM.Entity.DoNotCallBasicInfoModel
+@using CSM.Common.Utilities
+
+<div class="section_borderless_panel">
+    @Html.HiddenFor(x => x.TransactionId, htmlAttributes: new { @id = "hidTransactionId" })
+    <div>
+        <!--Left Part-->
+        <div class="col-sm-6 nopadding">
+            <div class="row form-group">
+                <label class="col-sm-4 control-label form-label">@Html.DisplayNameFor(m => m.EffectiveDate):</label>
+                <div class="col-sm-8 nopadding">
+                    <div class='input-group date' data-date-format="dd/mm/yyyy" id='dvEffectiveDate'>
+                        @Html.TextBoxFor(model => model.EffectiveDate, new
+                        {
+                            @class = "form-control input-sm datepicker",
+                            @id = "txtEffectiveDate",
+                            @onblur = "onChangeEffectiveDate($jq(this));",
+                            @style = "z-index: 2!important;"
+                        })
+                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.EffectiveDate)
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-sm-4 control-label form-label">@Html.DisplayNameFor(m => m.FromSystem):</label>
+                <div class="col-sm-8 nopadding">
+                    @Html.TextBoxFor(m => m.FromSystem, new { disabled = true, @class = "form-control input-sm" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-sm-4 control-label form-label">@Html.DisplayNameFor(m => m.CreateByName):</label>
+                <div class="col-sm-8 nopadding">
+                    @Html.TextBoxFor(m => m.CreateByName, new { disabled = true, @class = "form-control input-sm" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-sm-4 control-label form-label">@Html.DisplayNameFor(m => m.UpdateByName):</label>
+                <div class="col-sm-8 nopadding">
+                    @Html.TextBoxFor(m => m.UpdateByName, new { disabled = true, @class = "form-control input-sm" })
+                </div>
+            </div>
+        </div>
+        <!--Right Part-->
+        <div class="col-sm-6 nopadding">
+            <div class="row form-group">
+                <label class="col-sm-4 control-label form-label">@Html.DisplayNameFor(m => m.ExpireDate):</label>
+                <div class="col-sm-4 nopadding">
+                    <div class='input-group date' data-date-format="dd/mm/yyyy" id='dvExpireDate'>
+                        @Html.TextBoxFor(model => model.ExpireDate, new
+                        {
+                            @class = "form-control input-sm datepicker",
+                            @id = "txtExpireDate",
+                            @onblur = "onChangeExpireDate($jq(this));",
+                            @style = "z-index: 2!important;"
+                        })
+                        <span class="input-group-addon"><span class="fa fa-calendar"></span></span>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ExpireDate)
+                </div>
+                <div class="col-sm-4 padding-right-5">
+                    <label class="control-label form-label">@Html.CheckBoxFor(m => m.IsNeverExpire, new { id = "chkNeverExpire" }) @Html.DisplayNameFor(m => m.IsNeverExpire)</label>
+                </div>
+            </div>
+
+            <div class="row form-group">
+                <label class="col-sm-4 control-label form-label">@Html.DisplayNameFor(m => m.DisplayStatus):</label>
+                <div class="col-sm-8 nopadding">
+                    @Html.TextBoxFor(m => m.DisplayStatus, new { disabled = true, @class = "form-control input-sm" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-sm-4 control-label form-label">@Html.DisplayNameFor(m => m.CreateDate):</label>
+                <div class="col-sm-8 nopadding">
+                    @Html.TextBoxFor(m => m.DisplayCreateDate, new { @id = "txtCreateDate", disabled = true, @class = "form-control input-sm" })
+                    @Html.HiddenFor(m => m.CreateDate, new { @id = "hidCreateDate" })
+                </div>
+            </div>
+            <div class="row form-group">
+                <label class="col-sm-4 control-label form-label">@Html.DisplayNameFor(m => m.UpdateDate):</label>
+                <div class="col-sm-8 nopadding">
+                    @Html.TextBoxFor(m => m.DisplayUpdateDate, new { @id = "txtUpdateDate", disabled = true, @class = "form-control input-sm" })
+                    @Html.HiddenFor(m => m.UpdateDate, new { @id = "hidUpdateDate" })
+                </div>
+            </div>
+        </div>
+    </div>
+    <div style="padding-left:15px;">
+        <div class="row form-group">
+            <label class="col-sm-1 control-label form-label">@Html.DisplayNameFor(m => m.Remark):</label>
+            <div class="col-sm-11">
+                @Html.TextAreaFor(m => m.Remark, new { @id = "txtRemark", @class = "form-control input-sm", style = "resize:none;", maxLength = Constants.MaxLength.RemarkDoNotCall })
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    var defaultExpireDate = new Date(@Model.ExpireDate.Year, @(Model.ExpireDate.Month - 1), @Model.ExpireDate.Day);
+    var defaultEffectiveDate = new Date(@Model.EffectiveDate.Year, @(Model.EffectiveDate.Month - 1), @Model.EffectiveDate.Day);
+    var neverExpireDate = new Date(@ViewBag.NeverExpireYear, @ViewBag.NeverExpireMonth - 1, @ViewBag.NeverExpireDay);
+
+    $jq(function () {
+        initEffectiveDatePicker();
+        initExpireDatePicker();
+        $jq("#chkNeverExpire").on("change", toggleExpireDateCalendar);
+        toggleExpireDateCalendar();
+    });
+
+    function onChangeEffectiveDate(element) {
+        if (!validateStringDate(element.val()))
+            resetEffectiveDate();
+        else
+            $jq("#dvEffectiveDate").datepicker('update');
+    }
+
+    function onChangeExpireDate(element) {
+        if (!validateStringDate(element.val()))
+            toggleExpireDateCalendar();
+        else
+            mapExpireDateWithEffectiveDate();
+    }
+
+    function validateStringDate(inputString) {
+        var parsedDate = tryConvertStringToDate(inputString);
+        return validateParsedDate(inputString, parsedDate);
+    }
+
+    function resetEffectiveDate() {
+        changeEffectiveDate(defaultEffectiveDate);
+    }
+
+    function changeEffectiveDate(newDate) {
+        $jq("#dvEffectiveDate").datepicker('setDate', newDate);
+        $jq("#txtEffectiveDate").val(convertDateToString_ddMMyyyy(newDate, "/"));
+    }
+
+    function toggleExpireDateCalendar() {
+        var checkedNeverExpired = $jq("#chkNeverExpire").prop("checked");
+        $jq("#txtExpireDate").prop("disabled", checkedNeverExpired);
+        var setDate = checkedNeverExpired ? neverExpireDate : defaultExpireDate;
+        changeExpireDate(setDate);
+
+        if(!checkedNeverExpired)
+            mapExpireDateWithEffectiveDate();
+        $jq("#dvExpireDate .input-group-addon").css("visibility", checkedNeverExpired ? 'hidden': 'unset');
+    }
+
+    function initEffectiveDatePicker() {
+        $jq("#dvEffectiveDate").datepicker({
+            format: 'dd/mm/yyyy',
+            orientation: 'auto top',
+            endDate: "+50y",
+            showOnFocus: "false",
+            language: 'th',
+            autoclose: true
+        }).on('changeDate', onEffectiveDateChange);
+
+        resetEffectiveDate();
+    }
+
+    function getEffectiveDate() {
+        return $jq("#dvEffectiveDate").datepicker('getDate');
+    }
+
+    function getExpireDate() {
+        return $jq("#dvExpireDate").datepicker('getDate');
+    }
+
+    function initExpireDatePicker() {
+        $jq("#dvExpireDate").datepicker({
+            format: 'dd/mm/yyyy',
+            orientation: 'auto top',
+            endDate: "+50y",
+            showOnFocus: "false",
+            language: 'th',
+            autoclose: true,
+        }).on('changeDate', function (ev) {
+            $jq(this).datepicker('hide');
+        });
+
+        resetExpireStartDate();
+    }
+
+    function onEffectiveDateChange(e) {
+        mapExpireDateWithEffectiveDate();
+        // reset start date
+        resetExpireStartDate();
+    }
+
+    function mapExpireDateWithEffectiveDate() {
+        var effectiveDate = getEffectiveDate();
+        var expireDate = getExpireDate();
+
+        // if effective date > expire date -> reset expire date to effective date
+        if (effectiveDate > expireDate)
+            changeExpireDate(effectiveDate);
+    }
+
+    function resetExpireStartDate() {
+        $jq("#dvExpireDate").datepicker('setStartDate', getEffectiveDate());
+    }
+
+    function changeExpireDate(newDate) {
+        $jq("#dvExpireDate").datepicker('setDate', newDate);
+        $jq("#txtExpireDate").val(convertDateToString_ddMMyyyy(newDate, "/"));
+    }
+</script>

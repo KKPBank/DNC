@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<services>
+  <service name="BatchUpdateDoNotCallStatus">
+    <service_name>BatchUpdateDoNotCallStatus</service_name>
+    <username>CSM</username>
+    <password>CSM</password>
+    <reference_no></reference_no>
+    <system_code>CSM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command>BatchUpdateDoNotCallStatus</command>
+  </service>
+  <service name="InquiryDoNotCallList">
+    <service_name>InquiryDoNotCallList</service_name>
+    <username>CSM</username>
+    <password>CSM</password>
+    <reference_no></reference_no>
+    <system_code>CSM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+  <service name="InsertDoNotCallCustomerList">
+    <service_name>InsertDoNotCallCustomerList</service_name>
+    <username>CSM</username>
+    <password>CSM</password>
+    <reference_no></reference_no>
+    <system_code>CSM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+  <service name="UpdateDoNotCallCustomerList">
+    <service_name>UpdateDoNotCallCustomerList</service_name>
+    <username>CSM</username>
+    <password>CSM</password>
+    <reference_no></reference_no>
+    <system_code>CSM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+  <service name="ExportDoNotCallList">
+    <service_name>ExportDoNotCallList</service_name>
+    <username>CSM</username>
+    <password>CSM</password>
+    <reference_no></reference_no>
+    <system_code>CSM</system_code>
+    <transaction_date></transaction_date>
+    <channel_id>CSM</channel_id>
+    <command></command>
+  </service>
+</services>
